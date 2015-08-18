@@ -19,14 +19,18 @@ package org.openhab;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.openhab.schemas.config_description.v1_0.ConfigDescriptions;
+import org.openhab.schemas.thing_description.v1_0.ChannelGroupType;
+import org.openhab.schemas.thing_description.v1_0.ChannelType;
 import org.openhab.schemas.thing_description.v1_0.ThingDescriptions;
+import org.openhab.schemas.thing_description.v1_0.ThingType;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Goal which touches a timestamp file.
@@ -40,29 +44,43 @@ public class MyMojo extends AbstractMojo {
     private static final String THINGXSD = "http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd";
     private static final String CHANNEL_GROUP_TYPE = "channel-group-type";
 
+    private List<ChannelType> channelTypes = new ArrayList<ChannelType>();
+    private List<ThingType> thingTypes = new ArrayList<ThingType>();
+    private List<ChannelGroupType> channelGroupTypes = new ArrayList<ChannelGroupType>();
+
     public void execute() throws MojoExecutionException {
         Path curPath = Paths.get("");
         getLog().info(curPath.toAbsolutePath().toString());
 
         String eshDir = "src/test/resources/ESH-INF/";
-        parseChannelGroupType(eshDir + "thing/channels.xml");
+        parseChannels(eshDir + "thing/channels.xml");
     }
 
     /**
-     * NOTE: CARE FOR THE FUCKING NAMESPACE IN {@link ThingDescriptions} and {@link ConfigDescriptions}.
+     * NOTE: CARE FOR THE NAMESPACE IN {@link ThingDescriptions} and {@link ConfigDescriptions}.
      *
      * @param channel
      */
-    private void parseChannelGroupType(String channel) {
+    private void parseChannels(String channel) {
         try {
             JAXBContext jc = JAXBContext.newInstance(ThingDescriptions.class);
 
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             ThingDescriptions thingDesc = (ThingDescriptions) unmarshaller.unmarshal(new File(channel));
 
-            Marshaller marshaller = jc.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(thingDesc, System.out);
+            // Go through all the available types
+            List<Object> objs = thingDesc.getThingTypeOrBridgeTypeOrChannelType();
+            for (Object obj : objs) {
+                if (obj instanceof ChannelType) {
+                    channelTypes.add((ChannelType) obj);
+                } else if (obj instanceof ThingType) {
+                    thingTypes.add((ThingType) obj);
+                } else if (obj instanceof ChannelGroupType) {
+                    channelGroupTypes.add((ChannelGroupType) obj);
+                }
+            }
+
+            getLog().info(MarkdownProvider.handleChannels(channelTypes));
         } catch (Exception e) {
             getLog().error(e);
         }
