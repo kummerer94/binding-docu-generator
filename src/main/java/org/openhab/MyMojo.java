@@ -20,10 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.openhab.schemas.config_description.v1_0.ConfigDescriptions;
-import org.openhab.schemas.thing_description.v1_0.ChannelGroupType;
-import org.openhab.schemas.thing_description.v1_0.ChannelType;
-import org.openhab.schemas.thing_description.v1_0.ThingDescriptions;
-import org.openhab.schemas.thing_description.v1_0.ThingType;
+import org.openhab.schemas.thing_description.v1_0.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -49,10 +46,14 @@ public class MyMojo extends AbstractMojo {
     private List<ChannelType> channelTypes = new ArrayList<ChannelType>();
     private List<ThingType> thingTypes = new ArrayList<ThingType>();
     private List<ChannelGroupType> channelGroupTypes = new ArrayList<ChannelGroupType>();
+    private List<BridgeType> bridgeTypes = new ArrayList<BridgeType>();
 
     public void execute() throws MojoExecutionException {
         String eshDir = "src/test/resources/ESH-INF/";
-        parseChannels(eshDir + "thing/channels.xml");
+        parseThingDescripions(eshDir + "thing/channels.xml");
+        parseThingDescripions(eshDir + "thing/moon.xml");
+        parseThingDescripions(eshDir + "thing/sun.xml");
+        parseThingDescripions(eshDir + "thing/bridge.xml");
         writeReadme();
     }
 
@@ -61,7 +62,7 @@ public class MyMojo extends AbstractMojo {
      *
      * @param channel
      */
-    private void parseChannels(String channel) {
+    private void parseThingDescripions(String channel) {
         try {
             JAXBContext jc = JAXBContext.newInstance(ThingDescriptions.class);
 
@@ -73,10 +74,14 @@ public class MyMojo extends AbstractMojo {
             for (Object obj : objs) {
                 if (obj instanceof ChannelType) {
                     channelTypes.add((ChannelType) obj);
-                } else if (obj instanceof ThingType) {
-                    thingTypes.add((ThingType) obj);
+                } else if (obj instanceof BridgeType) {
+                    bridgeTypes.add((BridgeType) obj);
                 } else if (obj instanceof ChannelGroupType) {
                     channelGroupTypes.add((ChannelGroupType) obj);
+                } else if (obj instanceof ThingType) {
+                    thingTypes.add((ThingType) obj);
+                } else {
+                    getLog().info("Unsupported class. " + obj.getClass().toString());
                 }
             }
         } catch (Exception e) {
@@ -89,7 +94,9 @@ public class MyMojo extends AbstractMojo {
      */
     private void writeReadme() {
         StringBuilder builder = new StringBuilder(MarkdownProvider.getHeader())
-                .append(MarkdownProvider.handleChannelTypes(channelTypes))
+                .append(MarkdownProvider.handleBridgeTypes(bridgeTypes))
+                .append("\n\n").append(MarkdownProvider.handleBridgeConfig(bridgeTypes))
+                .append("\n\n").append(MarkdownProvider.handleChannelTypes(channelTypes))
                 .append("\n\n").append(MarkdownProvider.handleThingTypes(thingTypes))
                 .append("\n\n").append(MarkdownProvider.handleChannelGroupTypes(channelGroupTypes));
         try {
