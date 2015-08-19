@@ -1,6 +1,7 @@
 package org.openhab;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openhab.schemas.config_description.v1_0.ConfigDescription;
 import org.openhab.schemas.config_description.v1_0.Parameter;
 import org.openhab.schemas.thing_description.v1_0.*;
 
@@ -12,16 +13,18 @@ import java.util.List;
  */
 public class MarkdownProvider {
 
-    private final static String[] CHANNEL_TYPE_HEADER = {"Channel Type Id", "Label", "Item Type", "ReadOnly", "Options", "Description"};
+    private final static String[] CHANNEL_TYPE_HEADER = {"Channel Type Id", "Item Type", "ReadOnly", "Options", "Description"};
     private final static String CHANNEL_TYPE_TITLE = "Channels";
-    private final static String[] CHANNEL_GROUP_TYPE_HEADER = {"Channel Group Type Id", "Label", "Channels", "Description"};
+    private final static String[] CHANNEL_GROUP_TYPE_HEADER = {"Channel Group Type Id", "Channels", "Description"};
     private final static String CHANNEL_GROUP_TITLE = "Channel Groups";
-    private final static String[] THING_TYPE_HEADER = {"Thing Type Id", "Label", "Channel Groups", "Description"};
+    private final static String[] THING_TYPE_HEADER = {"Thing Type Id", "Channel Groups", "Config", "Description"};
     private final static String THING_TYPE_TITLE = "Things";
-    private final static String[] BRIDGE_TYPE_HEADER = {"Bridge Type Id", "Label", "Channel Groups", "Channels", "Description"};
+    private final static String[] BRIDGE_TYPE_HEADER = {"Bridge Type Id", "Channel Groups", "Channels", "Description"};
     private final static String BRIDGE_TYPE_TITLE = "Bridges";
-    private final static String[] BRIDGE_CONFIG_HEADER = {"Name", "Type", "Label", "Properties", "Context", "Description"};
-    private final static String BRIDGE_CONFIG_TITLE = "Config for bridge: ";
+    private final static String[] CONFIG_HEADER = {"Name", "Type", "Properties", "Context", "Description"};
+    private final static String BRIDGE_CONFIG_TITLE = "Configuration for bridge: ";
+    private final static String THING_CONFIG_TITLE = "Configuration for thing. ";
+    private final static String CONFIG_DESC_TITLE = "Config descriptions";
     public static final String TABLE_DIVIDER = "|";
 
     /**
@@ -90,7 +93,7 @@ public class MarkdownProvider {
             return builder;
         }
         for (Channel channel : channels.getChannel()) {
-            builder.append("[").append(channel.getId()).append("]").append("(#channel-id-" + channel.getTypeId() + ")").append(", ");
+            builder.append(link(channel.getId(), "#channel-id-" + channel.getTypeId())).append(", ");
         }
         // Remove trailing ","
         builder.deleteCharAt(builder.lastIndexOf(","));
@@ -109,7 +112,7 @@ public class MarkdownProvider {
             return builder;
         }
         for (ChannelGroup group : groups.getChannelGroup()) {
-            builder.append("[").append(group.getId()).append("]").append("(#channel-group-id-" + group.getTypeId() + ")").append(", ");
+            builder.append(link(group.getId(), "#channel-group-id-" + group.getTypeId())).append(", ");
         }
         // Remove trailing ","
         builder.deleteCharAt(builder.lastIndexOf(","));
@@ -130,6 +133,26 @@ public class MarkdownProvider {
         appendNotNull(builder, "min=", param.getMin()).append(", ");
         appendNotNull(builder, "step=", param.getStep()).append(", ");
         appendNotNull(builder, "pattern=", param.getPattern()).append(", ");
+        builder.delete(builder.length() - 2, builder.length() - 1);
+        return builder;
+    }
+
+    /**
+     * Creates the markdown for a given configuration.
+     *
+     * @param builder
+     * @param config
+     * @return
+     */
+    private static StringBuilder configToString(StringBuilder builder, ConfigDescription config) {
+        for (Parameter param : config.getParameter()) {
+            builder.append(TABLE_DIVIDER)
+                    .append(param.getName()).append(TABLE_DIVIDER)
+                    .append(param.getType()).append(TABLE_DIVIDER)
+                    .append(propertiesToString(param)).append(TABLE_DIVIDER)
+                    .append(((param.getContext() != null) ? param.getContext() : "default")).append(TABLE_DIVIDER)
+                    .append(sanitize(param.getDescription())).append(TABLE_DIVIDER).append("\n");
+        }
         return builder;
     }
 
@@ -141,6 +164,27 @@ public class MarkdownProvider {
      */
     private static String trueOrFalse(Boolean expr) {
         return (expr != null && expr) ? "true" : "false";
+    }
+
+    /**
+     * Creates a markdown link.
+     *
+     * @param title
+     * @param url
+     * @return
+     */
+    private static String link(String title, String url) {
+        return String.format("[%s](%s)", title, url);
+    }
+
+    /**
+     * Shortcut.
+     *
+     * @param title
+     * @return
+     */
+    private static String link(String title) {
+        return link(title, title);
     }
 
     /**
@@ -189,7 +233,6 @@ public class MarkdownProvider {
                     // Add anchor for channel id
                     .append("<a name=\"channel-id-" + channel.getId() + "\"></a>")
                     .append(channel.getId()).append(TABLE_DIVIDER)
-                    .append(channel.getLabel()).append(TABLE_DIVIDER)
                     .append(channel.getItemType()).append(TABLE_DIVIDER)
                     .append((channel.getState().isReadOnly()) ? "Yes" : "No").append(TABLE_DIVIDER)
                     .append(optionsToString(channel.getState().getOptions())).append(TABLE_DIVIDER)
@@ -206,11 +249,10 @@ public class MarkdownProvider {
      */
     public static String handleThingTypes(List<ThingType> things) {
         StringBuilder builder = new StringBuilder(getTableHeader(THING_TYPE_TITLE, Arrays.asList(THING_TYPE_HEADER)));
-
         for (ThingType thing : things) {
             builder.append(TABLE_DIVIDER).append(thing.getId()).append(TABLE_DIVIDER)
-                    .append(thing.getLabel()).append(TABLE_DIVIDER)
                     .append(channelGroupsToString(thing.getChannelGroups())).append(TABLE_DIVIDER)
+                    .append((thing.getConfigDescriptionRef() != null) ? link("#config-desc-" + thing.getConfigDescriptionRef().getUri()) : "").append(TABLE_DIVIDER)
                     .append(sanitize(thing.getDescription())).append(TABLE_DIVIDER).append("\n");
         }
         return builder.toString();
@@ -229,7 +271,6 @@ public class MarkdownProvider {
                     // Add anchor for channel group id
                     .append("<a name=\"channel-group-id-" + channel.getId() + "\"></a>")
                     .append(channel.getId()).append(TABLE_DIVIDER)
-                    .append(channel.getLabel()).append(TABLE_DIVIDER)
                     .append(channelsToString(channel.getChannels())).append(TABLE_DIVIDER)
                     .append(sanitize(channel.getDescription())).append(TABLE_DIVIDER).append("\n");
         }
@@ -249,7 +290,6 @@ public class MarkdownProvider {
                     // Add anchor for bridge id
                     .append("<a name=\"bridge-id-" + bridge.getId() + "\"></a>")
                     .append(bridge.getId()).append(TABLE_DIVIDER)
-                    .append(bridge.getLabel()).append(TABLE_DIVIDER)
                     .append(channelGroupsToString(bridge.getChannelGroups())).append(TABLE_DIVIDER)
                     .append(channelsToString(bridge.getChannels())).append(TABLE_DIVIDER)
                     .append(sanitize(bridge.getDescription())).append(TABLE_DIVIDER).append("\n");
@@ -267,16 +307,44 @@ public class MarkdownProvider {
         StringBuilder builder = new StringBuilder();
         for (BridgeType bridge : bridges) {
             if (bridge.getConfigDescription() != null && bridge.getConfigDescription().getParameter().size() > 0) {
-                builder.append(getTableHeader(BRIDGE_CONFIG_TITLE + bridge.getLabel(), Arrays.asList(BRIDGE_CONFIG_HEADER)));
-                for (Parameter param : bridge.getConfigDescription().getParameter()) {
-                    builder.append(TABLE_DIVIDER)
-                            .append(param.getName()).append(TABLE_DIVIDER)
-                            .append(param.getType()).append(TABLE_DIVIDER)
-                            .append(param.getLabel()).append(TABLE_DIVIDER)
-                            .append(propertiesToString(param)).append(TABLE_DIVIDER)
-                            .append(((param.getContext() != null) ? param.getContext() : "default")).append(TABLE_DIVIDER)
-                            .append(sanitize(param.getDescription())).append(TABLE_DIVIDER).append("\n");
-                }
+                builder.append(getTableHeader(BRIDGE_CONFIG_TITLE + bridge.getId(), Arrays.asList(CONFIG_HEADER)));
+                configToString(builder, bridge.getConfigDescription());
+            }
+        }
+        return builder.toString();
+    }
+
+    /**
+     * Creates the markdown for the config of the things.
+     *
+     * @param things
+     * @return
+     */
+    public static String handleThingConfig(List<ThingType> things) {
+        StringBuilder builder = new StringBuilder();
+        for (ThingType thing : things) {
+            if (thing.getConfigDescription() != null && thing.getConfigDescription().getParameter().size() > 0) {
+                builder.append(getTableHeader(THING_CONFIG_TITLE + thing.getId(), Arrays.asList(CONFIG_HEADER)));
+                configToString(builder, thing.getConfigDescription());
+            }
+        }
+        return builder.toString();
+    }
+
+    /**
+     * Creates the markdown for the given config descriptions.
+     *
+     * @param configs
+     * @return
+     */
+    public static String handleConfigDescriptions(List<ConfigDescription> configs) {
+        StringBuilder builder = new StringBuilder("## " + CONFIG_DESC_TITLE).append("\n\n");
+        for (ConfigDescription config : configs) {
+            if (config.getParameter() != null && config.getParameter().size() > 0) {
+                // Add anchor
+                builder.append("## ").append(config.getUri()).append("<a name=\"config-desc-").append(config.getUri()).append("\"></a> \n\n");
+                builder.append(getTableHeader(Arrays.asList(CONFIG_HEADER)));
+                configToString(builder, config);
             }
         }
         return builder.toString();

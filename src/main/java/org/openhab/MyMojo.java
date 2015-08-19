@@ -19,6 +19,7 @@ package org.openhab;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.openhab.schemas.config_description.v1_0.ConfigDescription;
 import org.openhab.schemas.config_description.v1_0.ConfigDescriptions;
 import org.openhab.schemas.thing_description.v1_0.*;
 
@@ -47,6 +48,7 @@ public class MyMojo extends AbstractMojo {
     private List<ThingType> thingTypes = new ArrayList<ThingType>();
     private List<ChannelGroupType> channelGroupTypes = new ArrayList<ChannelGroupType>();
     private List<BridgeType> bridgeTypes = new ArrayList<BridgeType>();
+    private List<ConfigDescription> config = new ArrayList<ConfigDescription>();
 
     public void execute() throws MojoExecutionException {
         String eshDir = "src/test/resources/ESH-INF/";
@@ -54,20 +56,21 @@ public class MyMojo extends AbstractMojo {
         parseThingDescripions(eshDir + "thing/moon.xml");
         parseThingDescripions(eshDir + "thing/sun.xml");
         parseThingDescripions(eshDir + "thing/bridge.xml");
+        parseConfigDescriptions(eshDir + "config/config.xml");
         writeReadme();
     }
 
     /**
      * Parses the xml with the available channels.
      *
-     * @param channel
+     * @param file
      */
-    private void parseThingDescripions(String channel) {
+    private void parseThingDescripions(String file) {
         try {
             JAXBContext jc = JAXBContext.newInstance(ThingDescriptions.class);
 
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            ThingDescriptions thingDesc = (ThingDescriptions) unmarshaller.unmarshal(new File(channel));
+            ThingDescriptions thingDesc = (ThingDescriptions) unmarshaller.unmarshal(new File(file));
 
             // Go through all the available types
             List<Object> objs = thingDesc.getThingTypeOrBridgeTypeOrChannelType();
@@ -90,6 +93,23 @@ public class MyMojo extends AbstractMojo {
     }
 
     /**
+     * Parses the xml with the available configuration.
+     *
+     * @param file
+     */
+    private void parseConfigDescriptions(String file) {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(ConfigDescriptions.class);
+
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            ConfigDescriptions configDesc = (ConfigDescriptions) unmarshaller.unmarshal(new File(file));
+            config = configDesc.getConfigDescription();
+        } catch (Exception e) {
+            getLog().error(e);
+        }
+    }
+
+    /**
      * Writes the readme file.
      */
     private void writeReadme() {
@@ -98,7 +118,9 @@ public class MyMojo extends AbstractMojo {
                 .append("\n\n").append(MarkdownProvider.handleBridgeConfig(bridgeTypes))
                 .append("\n\n").append(MarkdownProvider.handleChannelTypes(channelTypes))
                 .append("\n\n").append(MarkdownProvider.handleThingTypes(thingTypes))
-                .append("\n\n").append(MarkdownProvider.handleChannelGroupTypes(channelGroupTypes));
+                .append("\n\n").append(MarkdownProvider.handleThingConfig(thingTypes))
+                .append("\n\n").append(MarkdownProvider.handleChannelGroupTypes(channelGroupTypes))
+                .append("\n\n").append(MarkdownProvider.handleConfigDescriptions(config));
         try {
             FileUtils.writeStringToFile(new File("generated-docu.md"), builder.toString(), "UTF-8");
         } catch (IOException e) {
