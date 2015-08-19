@@ -25,3 +25,4 @@ Make sure to **modify the namespaces** of the generated `ConfigDescriptions.java
 ```
 @XmlRootElement(name = "thing-descriptions", namespace = "http://eclipse.org/smarthome/schemas/thing-description/v1.0.0")
 ```
+

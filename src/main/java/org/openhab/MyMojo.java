@@ -16,6 +16,7 @@ package org.openhab;
  * limitations under the License.
  */
 
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.openhab.schemas.config_description.v1_0.ConfigDescriptions;
@@ -27,13 +28,14 @@ import org.openhab.schemas.thing_description.v1_0.ThingType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Goal which touches a timestamp file.
+ *
+ * NOTE: CARE FOR THE NAMESPACE IN {@link ThingDescriptions} and {@link ConfigDescriptions}.
  *
  * @goal generate-docu
  * @phase process-sources
@@ -49,15 +51,13 @@ public class MyMojo extends AbstractMojo {
     private List<ChannelGroupType> channelGroupTypes = new ArrayList<ChannelGroupType>();
 
     public void execute() throws MojoExecutionException {
-        Path curPath = Paths.get("");
-        getLog().info(curPath.toAbsolutePath().toString());
-
         String eshDir = "src/test/resources/ESH-INF/";
         parseChannels(eshDir + "thing/channels.xml");
+        writeReadme();
     }
 
     /**
-     * NOTE: CARE FOR THE NAMESPACE IN {@link ThingDescriptions} and {@link ConfigDescriptions}.
+     * Parses the xml with the available channels.
      *
      * @param channel
      */
@@ -79,10 +79,25 @@ public class MyMojo extends AbstractMojo {
                     channelGroupTypes.add((ChannelGroupType) obj);
                 }
             }
-
-            getLog().info(MarkdownProvider.handleChannels(channelTypes));
         } catch (Exception e) {
             getLog().error(e);
         }
     }
+
+    /**
+     * Writes the readme file.
+     */
+    private void writeReadme() {
+        StringBuilder builder = new StringBuilder(MarkdownProvider.getHeader())
+                .append(MarkdownProvider.handleChannelTypes(channelTypes))
+                .append("\n\n").append(MarkdownProvider.handleThingTypes(thingTypes))
+                .append("\n\n").append(MarkdownProvider.handleChannelGroupTypes(channelGroupTypes));
+        try {
+            FileUtils.writeStringToFile(new File("generated-docu.md"), builder.toString(), "UTF-8");
+        } catch (IOException e) {
+            getLog().error(e);
+        }
+    }
+
+
 }
