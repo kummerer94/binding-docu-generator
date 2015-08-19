@@ -252,7 +252,7 @@ public class MarkdownProvider {
         for (ThingType thing : things) {
             builder.append(TABLE_DIVIDER).append(thing.getId()).append(TABLE_DIVIDER)
                     .append(channelGroupsToString(thing.getChannelGroups())).append(TABLE_DIVIDER)
-                    .append((thing.getConfigDescriptionRef() != null) ? link("#config-desc-" + thing.getConfigDescriptionRef().getUri()) : "").append(TABLE_DIVIDER)
+                    .append((thing.getConfigDescriptionRef() != null) ? link(thing.getConfigDescriptionRef().getUri(), "#config-desc-" + thing.getConfigDescriptionRef().getUri()) : "").append(TABLE_DIVIDER)
                     .append(sanitize(thing.getDescription())).append(TABLE_DIVIDER).append("\n");
         }
         return builder.toString();
