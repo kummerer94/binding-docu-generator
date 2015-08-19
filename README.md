@@ -5,7 +5,7 @@ Large parts of a binding for eclipse smarthome can be generated automatically fr
 You are welcome to contribute to this repository. Just send me a pull request.
 
 ## Generating the 
-**TODO:** MAKE THIS WORKING AGAIN!!
+**TODO:** CURRENTLY NOT WORKING ON MY LOCAL MACHINE.
 
 **This is only necessary when the .xsd-files change. This should not happen very often.** You need to regenerate the schema classes. To do this, please download the new `binding-description-x.x.x.xsd`, `thing-description-x.x.x.xsd` and `config-description-x.x.x.xsd` and modify the corresponding paths in the XML schemas. (Exchange the paths to the .xsd-files with your local paths.)
 
