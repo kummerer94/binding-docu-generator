@@ -16,7 +16,10 @@ package org.openhab;
  * limitations under the License.
  */
 
-import org.apache.commons.io.FileUtils;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.openhab.schemas.config_description.v1_0.ConfigDescription;
@@ -26,13 +29,13 @@ import org.openhab.schemas.thing_description.v1_0.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Goal which touches a timestamp file.
- *
+ * <p/>
  * NOTE: CARE FOR THE NAMESPACE IN {@link ThingDescriptions} and {@link ConfigDescriptions}.
  *
  * @goal generate-docu
@@ -51,13 +54,25 @@ public class MyMojo extends AbstractMojo {
     private List<ConfigDescription> config = new ArrayList<ConfigDescription>();
 
     public void execute() throws MojoExecutionException {
+        // Configure loggers
+        BasicConfigurator.configure();
+
         String eshDir = "src/test/resources/ESH-INF/";
         parseThingDescripions(eshDir + "thing/channels.xml");
         parseThingDescripions(eshDir + "thing/moon.xml");
         parseThingDescripions(eshDir + "thing/sun.xml");
         parseThingDescripions(eshDir + "thing/bridge.xml");
         parseConfigDescriptions(eshDir + "config/config.xml");
-        writeReadme();
+
+        try {
+            MustacheFactory mf = new DefaultMustacheFactory();
+            Mustache mustache = mf.compile("src/main/resources/templates/bridges.mustache");
+            mustache.execute(new FileWriter("generated-docu-mustache.md"), bridgeTypes).flush();
+        } catch (Exception e) {
+            getLog().error(e);
+        }
+
+        // writeReadme();
     }
 
     /**
@@ -113,19 +128,19 @@ public class MyMojo extends AbstractMojo {
      * Writes the readme file.
      */
     private void writeReadme() {
-        StringBuilder builder = new StringBuilder(MarkdownProvider.getHeader())
-                .append(MarkdownProvider.handleBridgeTypes(bridgeTypes))
-                .append("\n\n").append(MarkdownProvider.handleBridgeConfig(bridgeTypes))
-                .append("\n\n").append(MarkdownProvider.handleChannelTypes(channelTypes))
-                .append("\n\n").append(MarkdownProvider.handleThingTypes(thingTypes))
-                .append("\n\n").append(MarkdownProvider.handleThingConfig(thingTypes))
-                .append("\n\n").append(MarkdownProvider.handleChannelGroupTypes(channelGroupTypes))
-                .append("\n\n").append(MarkdownProvider.handleConfigDescriptions(config));
-        try {
-            FileUtils.writeStringToFile(new File("generated-docu.md"), builder.toString(), "UTF-8");
-        } catch (IOException e) {
-            getLog().error(e);
-        }
+//        StringBuilder builder = new StringBuilder(MarkdownProvider.getHeader())
+//                .append(MarkdownProvider.handleBridgeTypes(bridgeTypes))
+//                .append("\n\n").append(MarkdownProvider.handleBridgeConfig(bridgeTypes))
+//                .append("\n\n").append(MarkdownProvider.handleChannelTypes(channelTypes))
+//                .append("\n\n").append(MarkdownProvider.handleThingTypes(thingTypes))
+//                .append("\n\n").append(MarkdownProvider.handleThingConfig(thingTypes))
+//                .append("\n\n").append(MarkdownProvider.handleChannelGroupTypes(channelGroupTypes))
+//                .append("\n\n").append(MarkdownProvider.handleConfigDescriptions(config));
+//        try {
+//            FileUtils.writeStringToFile(new File("generated-docu.md"), builder.toString(), "UTF-8");
+//        } catch (IOException e) {
+//            getLog().error(e);
+//        }
     }
 
 
