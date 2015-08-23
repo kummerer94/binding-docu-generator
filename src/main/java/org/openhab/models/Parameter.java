@@ -5,11 +5,23 @@ import java.math.BigDecimal;
 /**
  * Created by Alexander on 21.08.2015.
  */
-public class Parameter {
+public class Parameter implements Model<org.openhab.schemas.config_description.v1_0.Parameter> {
 
     protected org.openhab.schemas.config_description.v1_0.Parameter parameter;
 
+    public Parameter() {
+
+    }
+
     public Parameter(org.openhab.schemas.config_description.v1_0.Parameter parameter) {
+        setModel(parameter);
+    }
+
+    public org.openhab.schemas.config_description.v1_0.Parameter getType() {
+        return parameter;
+    }
+
+    public void setModel(org.openhab.schemas.config_description.v1_0.Parameter parameter) {
         this.parameter = parameter;
     }
 

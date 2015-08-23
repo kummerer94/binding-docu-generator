@@ -16,9 +16,17 @@ public class Bridge extends Thing {
 
     protected BridgeType bridge;
 
+    public Bridge() {
+    }
+
     public Bridge(BridgeType bridge) {
         super((ThingType) bridge);
         this.bridge = bridge;
+    }
+
+    @Override
+    public BridgeType getType() {
+        return bridge;
     }
 
     public List<String> supportedBridgeTypeRefs() {

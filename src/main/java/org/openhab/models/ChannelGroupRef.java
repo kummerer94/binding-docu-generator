@@ -1,12 +1,26 @@
 package org.openhab.models;
 
+import org.openhab.schemas.thing_description.v1_0.ChannelGroup;
+
 /**
  * Created by Alexander on 21.08.2015.
  */
-public class ChannelGroupRef {
-    private org.openhab.schemas.thing_description.v1_0.ChannelGroup channel;
+public class ChannelGroupRef implements Model<ChannelGroup> {
+    private ChannelGroup channel;
 
-    public ChannelGroupRef(org.openhab.schemas.thing_description.v1_0.ChannelGroup channel) {
+    public ChannelGroupRef() {
+
+    }
+
+    public ChannelGroupRef(ChannelGroup channel) {
+        setModel(channel);
+    }
+
+    public ChannelGroup getType() {
+        return channel;
+    }
+
+    public void setModel(ChannelGroup channel) {
         this.channel = channel;
     }
 

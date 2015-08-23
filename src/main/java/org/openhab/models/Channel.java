@@ -5,11 +5,23 @@ import org.openhab.schemas.thing_description.v1_0.ChannelType;
 /**
  * Created by Alexander on 21.08.2015.
  */
-public class Channel {
+public class Channel implements Model<ChannelType> {
 
     protected ChannelType channel;
 
+    public Channel() {
+
+    }
+
     public Channel(ChannelType channel) {
+        setModel(channel);
+    }
+
+    public ChannelType getType() {
+        return channel;
+    }
+
+    public void setModel(ChannelType channel) {
         this.channel = channel;
     }
 

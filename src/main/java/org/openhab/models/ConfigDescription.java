@@ -8,12 +8,23 @@ import java.util.Map;
 /**
  * Created by Alexander on 21.08.2015.
  */
-public class ConfigDescription {
+public class ConfigDescription implements Model<org.openhab.schemas.config_description.v1_0.ConfigDescription> {
     protected org.openhab.schemas.config_description.v1_0.ConfigDescription config;
 
-    public ConfigDescription(org.openhab.schemas.config_description.v1_0.ConfigDescription config) {
-        this.config = config;
+    public ConfigDescription() {
 
+    }
+
+    public ConfigDescription(org.openhab.schemas.config_description.v1_0.ConfigDescription config) {
+        setModel(config);
+    }
+
+    public org.openhab.schemas.config_description.v1_0.ConfigDescription getType() {
+        return config;
+    }
+
+    public void setModel(org.openhab.schemas.config_description.v1_0.ConfigDescription config) {
+        this.config = config;
     }
 
     public String uri() {

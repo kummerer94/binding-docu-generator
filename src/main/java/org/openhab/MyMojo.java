@@ -22,6 +22,7 @@ import com.github.mustachejava.MustacheFactory;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.openhab.data.*;
 import org.openhab.schemas.config_description.v1_0.ConfigDescription;
 import org.openhab.schemas.config_description.v1_0.ConfigDescriptions;
 import org.openhab.schemas.thing_description.v1_0.*;
@@ -30,7 +31,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -47,11 +48,11 @@ public class MyMojo extends AbstractMojo {
     private static final String THINGXSD = "http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd";
     private static final String CHANNEL_GROUP_TYPE = "channel-group-type";
 
-    private List<ChannelType> channelTypes = new ArrayList<ChannelType>();
-    private List<ThingType> thingTypes = new ArrayList<ThingType>();
-    private List<ChannelGroupType> channelGroupTypes = new ArrayList<ChannelGroupType>();
-    private List<BridgeType> bridgeTypes = new ArrayList<BridgeType>();
-    private List<ConfigDescription> config = new ArrayList<ConfigDescription>();
+    private ChannelList channels = new ChannelList();
+    private ThingList things = new ThingList();
+    private ChannelGroupList channelGroups = new ChannelGroupList();
+    private BridgeList bridges = new BridgeList();
+    private ConfigurationList configList = new ConfigurationList();
 
     public void execute() throws MojoExecutionException {
         // Configure loggers
@@ -65,14 +66,19 @@ public class MyMojo extends AbstractMojo {
         parseConfigDescriptions(eshDir + "config/config.xml");
 
         try {
+            // Compile mustache template
             MustacheFactory mf = new DefaultMustacheFactory();
             Mustache mustache = mf.compile("src/main/resources/templates/bridges.mustache");
-            mustache.execute(new FileWriter("generated-docu-mustache.md"), bridgeTypes).flush();
+            HashMap<String, Object> scope = new HashMap<String, Object>();
+            scope.put("bridgeList", bridges);
+            scope.put("thingList", things);
+            scope.put("channelList", channels);
+            scope.put("channelGroupList", channelGroups);
+            scope.put("configList", configList);
+            mustache.execute(new FileWriter("generated-docu-mustache.md"), scope).flush();
         } catch (Exception e) {
             getLog().error(e);
         }
-
-        // writeReadme();
     }
 
     /**
@@ -91,13 +97,13 @@ public class MyMojo extends AbstractMojo {
             List<Object> objs = thingDesc.getThingTypeOrBridgeTypeOrChannelType();
             for (Object obj : objs) {
                 if (obj instanceof ChannelType) {
-                    channelTypes.add((ChannelType) obj);
+                    channels.put((ChannelType) obj);
                 } else if (obj instanceof BridgeType) {
-                    bridgeTypes.add((BridgeType) obj);
+                    bridges.put((BridgeType) obj);
                 } else if (obj instanceof ChannelGroupType) {
-                    channelGroupTypes.add((ChannelGroupType) obj);
+                    channelGroups.put((ChannelGroupType) obj);
                 } else if (obj instanceof ThingType) {
-                    thingTypes.add((ThingType) obj);
+                    things.put((ThingType) obj);
                 } else {
                     getLog().info("Unsupported class. " + obj.getClass().toString());
                 }
@@ -118,7 +124,9 @@ public class MyMojo extends AbstractMojo {
 
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             ConfigDescriptions configDesc = (ConfigDescriptions) unmarshaller.unmarshal(new File(file));
-            config = configDesc.getConfigDescription();
+            for (ConfigDescription c : configDesc.getConfigDescription()) {
+                configList.put(c);
+            }
         } catch (Exception e) {
             getLog().error(e);
         }

@@ -1,21 +1,31 @@
 package org.openhab.models;
 
+import org.openhab.data.ChannelGroupRefList;
+import org.openhab.data.ChannelRefList;
 import org.openhab.schemas.thing_description.v1_0.Channel;
 import org.openhab.schemas.thing_description.v1_0.ChannelGroup;
 import org.openhab.schemas.thing_description.v1_0.ThingType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Alexander on 21.08.2015.
  * <p/>
  * Wrapper class to not fully depend on the existing models.
  */
-public class Thing {
+public class Thing implements Model<ThingType> {
     protected ThingType thing;
 
+    public Thing() {
+    }
+
     public Thing(ThingType type) {
+        setModel(type);
+    }
+
+    public ThingType getType() {
+        return thing;
+    }
+
+    public void setModel(ThingType type) {
         this.thing = type;
     }
 
@@ -40,22 +50,22 @@ public class Thing {
         }
     }
 
-    public List<ChannelRef> channels() {
-        List<ChannelRef> channelRefs = new ArrayList<ChannelRef>();
+    public ChannelRefList channels() {
+        ChannelRefList channelRefs = new ChannelRefList();
         if (thing.getChannels() != null) {
             for (Channel channel : thing.getChannels().getChannel()) {
-                channelRefs.add(new ChannelRef(channel));
+                channelRefs.put(channel);
             }
         }
         return channelRefs;
     }
 
 
-    public List<ChannelGroupRef> channelGroups() {
-        List<ChannelGroupRef> channels = new ArrayList<ChannelGroupRef>();
+    public ChannelGroupRefList channelGroups() {
+        ChannelGroupRefList channels = new ChannelGroupRefList();
         if (thing.getChannelGroups() != null) {
             for (ChannelGroup group : thing.getChannelGroups().getChannelGroup()) {
-                channels.add(new ChannelGroupRef(group));
+                channels.put(group);
             }
         }
         return channels;
