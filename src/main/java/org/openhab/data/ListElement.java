@@ -17,8 +17,8 @@ public class ListElement {
         this.isLast = isLast;
     }
 
-    public boolean isNotLast() {
-        return !isLast;
+    public boolean last() {
+        return isLast;
     }
 
     public void setModel(Model model) {

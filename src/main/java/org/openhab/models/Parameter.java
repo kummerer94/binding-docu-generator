@@ -1,5 +1,8 @@
 package org.openhab.models;
 
+import org.openhab.Utils;
+import org.openhab.data.OptionList;
+
 import java.math.BigDecimal;
 
 /**
@@ -10,7 +13,6 @@ public class Parameter implements Model<org.openhab.schemas.config_description.v
     protected org.openhab.schemas.config_description.v1_0.Parameter parameter;
 
     public Parameter() {
-
     }
 
     public Parameter(org.openhab.schemas.config_description.v1_0.Parameter parameter) {
@@ -25,6 +27,10 @@ public class Parameter implements Model<org.openhab.schemas.config_description.v
         this.parameter = parameter;
     }
 
+    public String type() {
+        return parameter.getType().toString();
+    }
+
     public String name() {
         return parameter.getName();
     }
@@ -35,6 +41,22 @@ public class Parameter implements Model<org.openhab.schemas.config_description.v
 
     public String description() {
         return parameter.getDescription();
+    }
+
+    public Boolean readOnly() {
+        return parameter.isReadOnly();
+    }
+
+    public String isReadOnly() {
+        return Utils.trueOrFalse(readOnly());
+    }
+
+    public Boolean required() {
+        return parameter.isRequired();
+    }
+
+    public String isRequired() {
+        return Utils.trueOrFalse(required());
     }
 
     public String defaultValue() {
@@ -51,6 +73,16 @@ public class Parameter implements Model<org.openhab.schemas.config_description.v
 
     public BigDecimal step() {
         return parameter.getStep();
+    }
+
+    public OptionList options() {
+        OptionList optionList = new OptionList();
+        if (parameter.getOptions() != null) {
+            for (org.openhab.schemas.config_description.v1_0.OptionsType.Option option : parameter.getOptions().getOption()) {
+                optionList.put(option);
+            }
+        }
+        return optionList;
     }
 
     public String pattern() {

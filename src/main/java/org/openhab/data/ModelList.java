@@ -25,6 +25,10 @@ public abstract class ModelList extends ArrayList<ListElement> {
         }
     }
 
+    public boolean empty() {
+        return this.isEmpty();
+    }
+
     public abstract Model getNewModel();
 
 }

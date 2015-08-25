@@ -1,0 +1,9 @@
+{{#configDescriptions}}
+    ### {{id}}
+    |Name|Type|Properties|Context|Description|
+    |---|---|---|---|---|
+    {{#configDescriptions}}
+        {{#parameter}}{{#model}}|{{name}} | {{type}} | {{>paramProperties}} | {{context}} | {{description}} |{{/model}}
+        {{/parameter}}
+    {{/configDescriptions}}
+{{/configDescriptions}}

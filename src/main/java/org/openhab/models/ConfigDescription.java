@@ -1,9 +1,7 @@
 package org.openhab.models;
 
+import org.openhab.data.ParameterList;
 import org.openhab.schemas.config_description.v1_0.Parameter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Alexander on 21.08.2015.
@@ -31,11 +29,11 @@ public class ConfigDescription implements Model<org.openhab.schemas.config_descr
         return config.getUri();
     }
 
-    public Map<String, org.openhab.models.Parameter> parameter() {
-        Map<String, org.openhab.models.Parameter> parameter = new HashMap<String, org.openhab.models.Parameter>();
+    public ParameterList parameter() {
+        ParameterList parameterList = new ParameterList();
         for (Parameter param : config.getParameter()) {
-            parameter.put(param.getName(), new org.openhab.models.Parameter(param));
+            parameterList.put(param);
         }
-        return parameter;
+        return parameterList;
     }
 }

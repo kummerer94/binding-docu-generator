@@ -29,6 +29,14 @@ public class Channel implements Model<ChannelType> {
         return channel.getId();
     }
 
+    public String itemType() {
+        return channel.getItemType();
+    }
+
+    public State state() {
+        return new State(channel.getState());
+    }
+
     public String description() {
         return channel.getDescription();
     }

@@ -41,7 +41,6 @@ public class Thing implements Model<ThingType> {
         return thing.getDescription();
     }
 
-
     public String configDescriptionRef() {
         if (thing.getConfigDescriptionRef() != null) {
             return thing.getConfigDescriptionRef().getUri();
@@ -59,7 +58,6 @@ public class Thing implements Model<ThingType> {
         }
         return channelRefs;
     }
-
 
     public ChannelGroupRefList channelGroups() {
         ChannelGroupRefList channels = new ChannelGroupRefList();

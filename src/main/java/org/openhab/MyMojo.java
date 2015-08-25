@@ -68,7 +68,7 @@ public class MyMojo extends AbstractMojo {
         try {
             // Compile mustache template
             MustacheFactory mf = new DefaultMustacheFactory();
-            Mustache mustache = mf.compile("src/main/resources/templates/bridges.mustache");
+            Mustache mustache = mf.compile("src/main/resources/templates/main.mustache");
             HashMap<String, Object> scope = new HashMap<String, Object>();
             scope.put("bridgeList", bridges);
             scope.put("thingList", things);

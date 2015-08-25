@@ -231,7 +231,7 @@ public class MarkdownProvider {
         for (ChannelType channel : channels) {
             builder.append(TABLE_DIVIDER)
                     // Add anchor for channel id
-                    .append("<a name=\"channel-id-" + channel.getId() + "\"></a>")
+                    .append("<a name=\"channel-id-").append(channel.getId()).append("\"></a>")
                     .append(channel.getId()).append(TABLE_DIVIDER)
                     .append(channel.getItemType()).append(TABLE_DIVIDER)
                     .append((channel.getState().isReadOnly()) ? "Yes" : "No").append(TABLE_DIVIDER)

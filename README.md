@@ -4,7 +4,10 @@ Large parts of a binding for eclipse smarthome can be generated automatically fr
 ## Contributing
 You are welcome to contribute to this repository. Just send me a pull request.
 
-## Generating the 
+## Data model
+To use Mustache without problems it was necessary to implement a strong data model. Since I did not want to extend the generated classes from JAXB, I created another data model. This also empowers us to change the way we parse our XML files later if necessary.
+
+## Generating the XML schema classes
 **TODO:** CURRENTLY NOT WORKING ON MY LOCAL MACHINE.
 
 **This is only necessary when the .xsd-files change. This should not happen very often.** You need to regenerate the schema classes. To do this, please download the new `binding-description-x.x.x.xsd`, `thing-description-x.x.x.xsd` and `config-description-x.x.x.xsd` and modify the corresponding paths in the XML schemas. (Exchange the paths to the .xsd-files with your local paths.)
