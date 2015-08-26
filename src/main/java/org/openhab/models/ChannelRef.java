@@ -17,7 +17,7 @@ public class ChannelRef implements Model<Channel> {
         setModel(channel);
     }
 
-    public Channel getType() {
+    public Channel getRealImpl() {
         return channel;
     }
 

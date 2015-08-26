@@ -19,7 +19,7 @@ public class Parameter implements Model<org.openhab.schemas.config_description.v
         setModel(parameter);
     }
 
-    public org.openhab.schemas.config_description.v1_0.Parameter getType() {
+    public org.openhab.schemas.config_description.v1_0.Parameter getRealImpl() {
         return parameter;
     }
 

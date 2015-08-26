@@ -5,6 +5,8 @@ import org.openhab.schemas.thing_description.v1_0.ChannelGroupType;
 
 /**
  * Created by Alexander on 22.08.2015.
+ *
+ * Wrapper class to not fully depend on the existing models.
  */
 public class ChannelGroup implements Model<org.openhab.schemas.thing_description.v1_0.ChannelGroupType> {
     protected ChannelGroupType channel;
@@ -17,7 +19,7 @@ public class ChannelGroup implements Model<org.openhab.schemas.thing_description
         setModel(channel);
     }
 
-    public ChannelGroupType getType() {
+    public ChannelGroupType getRealImpl() {
         return channel;
     }
 

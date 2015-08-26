@@ -68,10 +68,10 @@ public class MyMojo extends AbstractMojo {
 
         // EXAMPLE: ESH-INF
 //        eshDir = "src/test/resources/ESH-INF/";
-//        parseThingDescripions(eshDir + "thing/channels.xml");
-//        parseThingDescripions(eshDir + "thing/moon.xml");
-//        parseThingDescripions(eshDir + "thing/sun.xml");
-//        parseThingDescripions(eshDir + "thing/bridge.xml");
+//        parseThingDescriptions(eshDir + "thing/channels.xml");
+//        parseThingDescriptions(eshDir + "thing/moon.xml");
+//        parseThingDescriptions(eshDir + "thing/sun.xml");
+//        parseThingDescriptions(eshDir + "thing/bridge.xml");
 //        parseConfigDescriptions(eshDir + "config/config.xml");
 
 
@@ -105,7 +105,7 @@ public class MyMojo extends AbstractMojo {
             for (File file : things.listFiles()) {
                 if (file.getName().endsWith(".xml")) {
                     getLog().info("Found thing xml: " + file.getName());
-                    parseThingDescripions(file.getAbsolutePath());
+                    parseThingDescriptions(file.getAbsolutePath());
                 }
             }
         }
@@ -127,7 +127,7 @@ public class MyMojo extends AbstractMojo {
      *
      * @param file
      */
-    private void parseThingDescripions(String file) {
+    private void parseThingDescriptions(String file) {
         try {
             JAXBContext jc = JAXBContext.newInstance(ThingDescriptions.class);
 
@@ -172,25 +172,4 @@ public class MyMojo extends AbstractMojo {
             getLog().error(e);
         }
     }
-
-    /**
-     * Writes the readme file.
-     */
-    private void writeReadme() {
-//        StringBuilder builder = new StringBuilder(MarkdownProvider.getHeader())
-//                .append(MarkdownProvider.handleBridgeTypes(bridgeTypes))
-//                .append("\n\n").append(MarkdownProvider.handleBridgeConfig(bridgeTypes))
-//                .append("\n\n").append(MarkdownProvider.handleChannelTypes(channelTypes))
-//                .append("\n\n").append(MarkdownProvider.handleThingTypes(thingTypes))
-//                .append("\n\n").append(MarkdownProvider.handleThingConfig(thingTypes))
-//                .append("\n\n").append(MarkdownProvider.handleChannelGroupTypes(channelGroupTypes))
-//                .append("\n\n").append(MarkdownProvider.handleConfigDescriptions(config));
-//        try {
-//            FileUtils.writeStringToFile(new File("generated-docu.md"), builder.toString(), "UTF-8");
-//        } catch (IOException e) {
-//            getLog().error(e);
-//        }
-    }
-
-
 }

@@ -17,7 +17,7 @@ public class ConfigDescription implements Model<org.openhab.schemas.config_descr
         setModel(config);
     }
 
-    public org.openhab.schemas.config_description.v1_0.ConfigDescription getType() {
+    public org.openhab.schemas.config_description.v1_0.ConfigDescription getRealImpl() {
         return config;
     }
 

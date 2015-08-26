@@ -15,7 +15,7 @@ public class Option implements Model<org.openhab.schemas.thing_description.v1_0.
         setModel(option);
     }
 
-    public org.openhab.schemas.thing_description.v1_0.Option getType() {
+    public org.openhab.schemas.thing_description.v1_0.Option getRealImpl() {
         return option;
     }
 

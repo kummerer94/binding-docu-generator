@@ -21,7 +21,7 @@ public class Thing implements Model<ThingType> {
         setModel(type);
     }
 
-    public ThingType getType() {
+    public ThingType getRealImpl() {
         return thing;
     }
 

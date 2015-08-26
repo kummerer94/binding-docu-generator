@@ -16,7 +16,7 @@ public class ChannelGroupRef implements Model<ChannelGroup> {
         setModel(channel);
     }
 
-    public ChannelGroup getType() {
+    public ChannelGroup getRealImpl() {
         return channel;
     }
 
