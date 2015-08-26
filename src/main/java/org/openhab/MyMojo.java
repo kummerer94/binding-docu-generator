@@ -44,9 +44,11 @@ import java.util.List;
  */
 public class MyMojo extends AbstractMojo {
 
-    private static final String XMLSCHEMA = "http://eclipse.org/smarthome/schemas/binding/v1.0.0";
-    private static final String THINGXSD = "http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd";
-    private static final String CHANNEL_GROUP_TYPE = "channel-group-type";
+    //    private static final String XMLSCHEMA = "http://eclipse.org/smarthome/schemas/binding/v1.0.0";
+//    private static final String THINGXSD = "http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd";
+    private static final String THING_SUBDIR = "thing/";
+    private static final String BINDING_SUBDIR = "binding/";
+    private static final String CONFIG_SUBDIR = "config/";
 
     private ChannelList channels = new ChannelList();
     private ThingList things = new ThingList();
@@ -54,22 +56,28 @@ public class MyMojo extends AbstractMojo {
     private BridgeList bridges = new BridgeList();
     private ConfigurationList configList = new ConfigurationList();
 
+    /**
+     * @parameter name="esh-inf-dir" alias="eshInfDir" default-value="ESH-INF/"
+     */
+    private String eshDir;
+
+
     public void execute() throws MojoExecutionException {
         // Configure loggers
         BasicConfigurator.configure();
 
         // EXAMPLE: ESH-INF
-//        String eshDir = "src/test/resources/ESH-INF/";
+//        eshDir = "src/test/resources/ESH-INF/";
 //        parseThingDescripions(eshDir + "thing/channels.xml");
 //        parseThingDescripions(eshDir + "thing/moon.xml");
 //        parseThingDescripions(eshDir + "thing/sun.xml");
 //        parseThingDescripions(eshDir + "thing/bridge.xml");
 //        parseConfigDescriptions(eshDir + "config/config.xml");
 
-        // EXAMPLE: ESH-INF-BOSCH
-        String eshDir = "src/test/resources/ESH-INF-BOSCH/";
-        parseThingDescripions(eshDir + "thing/thing-types.xml");
 
+        // EXAMPLE: ESH-INF-BOSCH
+        eshDir = "src/test/resources/ESH-INF-BOSCH/";
+        scanDir();
 
         try {
             // Compile mustache template
@@ -84,6 +92,33 @@ public class MyMojo extends AbstractMojo {
             mustache.execute(new FileWriter("generated-docu-mustache.md"), scope).flush();
         } catch (Exception e) {
             getLog().error(e);
+        }
+    }
+
+    /**
+     * Scans the given eshDir for xml files.
+     */
+    private void scanDir() {
+        // Scan the things directory
+        File things = new File(eshDir + THING_SUBDIR);
+        if (things.exists() && things.isDirectory()) {
+            for (File file : things.listFiles()) {
+                if (file.getName().endsWith(".xml")) {
+                    getLog().info("Found thing xml: " + file.getName());
+                    parseThingDescripions(file.getAbsolutePath());
+                }
+            }
+        }
+
+        // Scan the config directory.
+        File configs = new File(eshDir + CONFIG_SUBDIR);
+        if (configs.exists() && configs.isDirectory()) {
+            for (File file : things.listFiles()) {
+                if (file.getName().endsWith(".xml")) {
+                    getLog().info("Found config xml: " + file.getName());
+                    parseConfigDescriptions(file.getAbsolutePath());
+                }
+            }
         }
     }
 
