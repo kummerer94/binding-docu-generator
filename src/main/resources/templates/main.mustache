@@ -1,87 +1,13 @@
-{{^bridgeList.empty}}
-## Bridges
-|Bridge Type Id|Channel Groups|Channels|Description|
-|---|---|---|---|
-{{/bridgeList.empty}}
-{{#bridgeList}}
-    {{#model}}|<a
-            name="bridge-id-{{id}}"></a>{{id}} | {{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}} | {{#channels}} {{>channelInfo}} {{/channels}} | {{description}}
-    {{/model}}
-{{/bridgeList}}
+{{>partials/bridges}}
 
+{{>partials/bridgeConfig}}
 
-{{^bridgeList.configDescriptions.empty}}
-## Bridge Config
-{{/bridgeList.configDescriptions.empty}}
+{{>partials/things}}
 
-{{#bridgeList}}
-    {{#model}}
-        {{#configDescriptions}}
-            ### {{id}}
-            {{>configDescriptions}}
-        {{/configDescriptions}}
-    {{/model}}
-{{/bridgeList}}
+{{>partials/thingConfig}}
 
+{{>partials/config}}
 
-{{^thingList.empty}}
-## Things
-|Thing Type Id|Channels|Channel Groups|Config|Description|
-|---|---|---|---|
-{{/thingList.empty}}
-{{#thingList}}
-    {{#model}}<a
-            name="thing-id-{{id}}"></a>{{id}} |{{#channels}} {{>channelInfo}} {{/channels}}| {{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}} | {{#configDescription}} [{{uri}}](#config-desc-{{uri}}) {{/configDescription}}| {{description}}
-    {{/model}}
-{{/thingList}}
+{{>partials/channels}}
 
-
-{{^thingList.configDescriptions.empty}}
-## Thing Config
-{{/thingList.configDescriptions.empty}}
-{{#thingList}}
-    {{#model}}
-        {{#configDescriptions}}
-            ### {{id}}
-            {{>configDescriptions}}
-        {{/configDescriptions}}
-    {{/model}}
-{{/thingList}}
-
-
-{{^configList.empty}}
-    ## Configurations
-{{/configList.empty}}
-
-{{#configList}}
-    {{#model}}
-        ## <a name="config-desc-{{uri}}"></a> {{uri}}
-        |Name|Type|Properties|Context|Description|
-        |---|---|---|---|---|
-        {{>parameterRow}}
-    {{/model}}
-{{/configList}}
-
-
-{{^channelList.empty}}
-## Channels
-|Channel Type Id|Item Type|ReadOnly|Options|Description|
-|---|---|---|---|---|
-{{/channelList.empty}}
-{{#channelList}}
-    {{#model}}<a
-            name="channel-id-{{id}}"></a>{{id}} | {{itemType}} | {{#state}}{{#readOnly}} Yes {{/readOnly}} {{^readOnly}} No {{/readOnly}} {{/state}} | {{#state}} {{#options}}{{#model}}{{value}}{{/model}}{{^last}}, {{/last}}{{/options}} {{/state}} | {{description}}
-    {{/model}}
-{{/channelList}}
-
-
-{{^channelGroupList.empty}}
-## Channel Groups
-|Channel Group Type Id|Channels|Description|
-|---|---|---|
-{{/channelGroupList.empty}}
-{{#channelGroupList}}
-    {{#model}}<a
-            name="channel-group-id-{{id}}"></a>{{id}} | {{#channels}} {{>channelInfo}} {{/channels}} | {{description}}
-    {{/model}}
-{{/channelGroupList}}
+{{>partials/channelGroups}}
