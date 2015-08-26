@@ -58,12 +58,18 @@ public class MyMojo extends AbstractMojo {
         // Configure loggers
         BasicConfigurator.configure();
 
-        String eshDir = "src/test/resources/ESH-INF/";
-        parseThingDescripions(eshDir + "thing/channels.xml");
-        parseThingDescripions(eshDir + "thing/moon.xml");
-        parseThingDescripions(eshDir + "thing/sun.xml");
-        parseThingDescripions(eshDir + "thing/bridge.xml");
-        parseConfigDescriptions(eshDir + "config/config.xml");
+        // EXAMPLE: ESH-INF
+//        String eshDir = "src/test/resources/ESH-INF/";
+//        parseThingDescripions(eshDir + "thing/channels.xml");
+//        parseThingDescripions(eshDir + "thing/moon.xml");
+//        parseThingDescripions(eshDir + "thing/sun.xml");
+//        parseThingDescripions(eshDir + "thing/bridge.xml");
+//        parseConfigDescriptions(eshDir + "config/config.xml");
+
+        // EXAMPLE: ESH-INF-BOSCH
+        String eshDir = "src/test/resources/ESH-INF-BOSCH/";
+        parseThingDescripions(eshDir + "thing/thing-types.xml");
+
 
         try {
             // Compile mustache template

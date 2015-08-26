@@ -1,53 +1,73 @@
+{{^bridgeList.empty}}
 ## Bridges
-
 |Bridge Type Id|Channel Groups|Channels|Description|
 |---|---|---|---|
+{{/bridgeList.empty}}
 {{#bridgeList}}
     {{#model}}|<a
             name="bridge-id-{{id}}"></a>{{id}} | {{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}} | {{#channels}} {{>channelInfo}} {{/channels}} | {{description}}
     {{/model}}
 {{/bridgeList}}
 
+
+{{^bridgeList.configDescriptions.empty}}
 ## Bridge Config
+{{/bridgeList.configDescriptions.empty}}
 
 {{#bridgeList}}
     {{#model}}
-
-        {{>configDescriptions}}
-
+        {{#configDescriptions}}
+            ### {{id}}
+            {{>configDescriptions}}
+        {{/configDescriptions}}
     {{/model}}
 {{/bridgeList}}
-{{#configList}}
-
-{{/configList}}
 
 
+{{^thingList.empty}}
 ## Things
-|Thing Type Id|Channel Groups|Config|Description|
+|Thing Type Id|Channels|Channel Groups|Config|Description|
 |---|---|---|---|
+{{/thingList.empty}}
 {{#thingList}}
     {{#model}}<a
-            name="thing-id-{{id}}"></a>{{id}} | {{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}} | {{#configDescription}} [{{uri}}](#config-desc-{{uri}}) {{/configDescription}}| {{description}}
+            name="thing-id-{{id}}"></a>{{id}} |{{#channels}} {{>channelInfo}} {{/channels}}| {{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}} | {{#configDescription}} [{{uri}}](#config-desc-{{uri}}) {{/configDescription}}| {{description}}
     {{/model}}
 {{/thingList}}
 
-## Thing Config
 
+{{^thingList.configDescriptions.empty}}
+## Thing Config
+{{/thingList.configDescriptions.empty}}
 {{#thingList}}
     {{#model}}
-
-        {{>configDescriptions}}
-
+        {{#configDescriptions}}
+            ### {{id}}
+            {{>configDescriptions}}
+        {{/configDescriptions}}
     {{/model}}
 {{/thingList}}
 
-{{#configList}}
 
+{{^configList.empty}}
+    ## Configurations
+{{/configList.empty}}
+
+{{#configList}}
+    {{#model}}
+        ## <a name="config-desc-{{uri}}"></a> {{uri}}
+        |Name|Type|Properties|Context|Description|
+        |---|---|---|---|---|
+        {{>parameterRow}}
+    {{/model}}
 {{/configList}}
 
+
+{{^channelList.empty}}
 ## Channels
 |Channel Type Id|Item Type|ReadOnly|Options|Description|
 |---|---|---|---|---|
+{{/channelList.empty}}
 {{#channelList}}
     {{#model}}<a
             name="channel-id-{{id}}"></a>{{id}} | {{itemType}} | {{#state}}{{#readOnly}} Yes {{/readOnly}} {{^readOnly}} No {{/readOnly}} {{/state}} | {{#state}} {{#options}}{{#model}}{{value}}{{/model}}{{^last}}, {{/last}}{{/options}} {{/state}} | {{description}}
@@ -55,9 +75,11 @@
 {{/channelList}}
 
 
+{{^channelGroupList.empty}}
 ## Channel Groups
 |Channel Group Type Id|Channels|Description|
 |---|---|---|
+{{/channelGroupList.empty}}
 {{#channelGroupList}}
     {{#model}}<a
             name="channel-group-id-{{id}}"></a>{{id}} | {{#channels}} {{>channelInfo}} {{/channels}} | {{description}}
