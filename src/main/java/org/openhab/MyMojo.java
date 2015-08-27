@@ -61,9 +61,9 @@ public class MyMojo extends AbstractMojo {
         BasicConfigurator.configure();
 
         // EXAMPLE: ESH-INF
-        // eshDir = "src/test/resources/ESH-INF/";
+        eshDir = "src/test/resources/ESH-INF/";
         // EXAMPLE: ESH-INF-BOSCH
-        eshDir = "src/test/resources/ESH-INF-BOSCH/";
+//        eshDir = "src/test/resources/ESH-INF-BOSCH/";
         scanDir();
 
         try {
@@ -109,7 +109,7 @@ public class MyMojo extends AbstractMojo {
         // Scan the config directory.
         File configs = new File(eshDir + CONFIG_SUBDIR);
         if (configs.exists() && configs.isDirectory()) {
-            for (File file : things.listFiles()) {
+            for (File file : configs.listFiles()) {
                 if (file != null) {
                     if (file.getName().endsWith(".xml")) {
                         getLog().info("Found config xml: " + file.getName());
