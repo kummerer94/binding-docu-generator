@@ -15,6 +15,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.openhab.data.*;
+import org.openhab.models.Binding;
 import org.openhab.schemas.config_description.v1_0.ConfigDescription;
 import org.openhab.schemas.config_description.v1_0.ConfigDescriptions;
 import org.openhab.schemas.thing_description.v1_0.*;
@@ -47,6 +48,7 @@ public class MyMojo extends AbstractMojo {
     private ChannelGroupList channelGroups = new ChannelGroupList();
     private BridgeList bridges = new BridgeList();
     private ConfigurationList configList = new ConfigurationList();
+    private Binding binding;
 
     /**
      * @parameter name="esh-inf-dir" alias="eshInfDir" default-value="ESH-INF/"
@@ -59,14 +61,7 @@ public class MyMojo extends AbstractMojo {
         BasicConfigurator.configure();
 
         // EXAMPLE: ESH-INF
-//        eshDir = "src/test/resources/ESH-INF/";
-//        parseThingDescriptions(eshDir + "thing/channels.xml");
-//        parseThingDescriptions(eshDir + "thing/moon.xml");
-//        parseThingDescriptions(eshDir + "thing/sun.xml");
-//        parseThingDescriptions(eshDir + "thing/bridge.xml");
-//        parseConfigDescriptions(eshDir + "config/config.xml");
-
-
+        // eshDir = "src/test/resources/ESH-INF/";
         // EXAMPLE: ESH-INF-BOSCH
         eshDir = "src/test/resources/ESH-INF-BOSCH/";
         scanDir();
@@ -74,8 +69,9 @@ public class MyMojo extends AbstractMojo {
         try {
             // Compile mustache template
             MustacheFactory mf = new DefaultMustacheFactory();
-            Mustache mustache = mf.compile("src/main/resources/templates/main.mustache");
+            Mustache mustache = mf.compile("src/main/resources/templates/readme.mustache");
             HashMap<String, Object> scope = new HashMap<String, Object>();
+            scope.put("binding", binding);
             scope.put("bridgeList", bridges);
             scope.put("thingList", things);
             scope.put("channelList", channels);
@@ -91,13 +87,21 @@ public class MyMojo extends AbstractMojo {
      * Scans the given eshDir for xml files.
      */
     private void scanDir() {
+        // Scan the binding directory.
+        File binding = new File(eshDir + BINDING_SUBDIR + "binding.xml");
+        if (binding.exists()) {
+            parseBindingDescription(binding);
+        }
+
         // Scan the things directory
         File things = new File(eshDir + THING_SUBDIR);
         if (things.exists() && things.isDirectory()) {
             for (File file : things.listFiles()) {
-                if (file.getName().endsWith(".xml")) {
-                    getLog().info("Found thing xml: " + file.getName());
-                    parseThingDescriptions(file.getAbsolutePath());
+                if (file != null) {
+                    if (file.getName().endsWith(".xml")) {
+                        getLog().info("Found thing xml: " + file.getName());
+                        parseThingDescriptions(file);
+                    }
                 }
             }
         }
@@ -106,9 +110,11 @@ public class MyMojo extends AbstractMojo {
         File configs = new File(eshDir + CONFIG_SUBDIR);
         if (configs.exists() && configs.isDirectory()) {
             for (File file : things.listFiles()) {
-                if (file.getName().endsWith(".xml")) {
-                    getLog().info("Found config xml: " + file.getName());
-                    parseConfigDescriptions(file.getAbsolutePath());
+                if (file != null) {
+                    if (file.getName().endsWith(".xml")) {
+                        getLog().info("Found config xml: " + file.getName());
+                        parseConfigDescriptions(file);
+                    }
                 }
             }
         }
@@ -117,26 +123,26 @@ public class MyMojo extends AbstractMojo {
     /**
      * Parses the xml with the available channels.
      *
-     * @param file
+     * @param file XML file.
      */
-    private void parseThingDescriptions(String file) {
+    private void parseThingDescriptions(File file) {
         try {
             JAXBContext jc = JAXBContext.newInstance(ThingDescriptions.class);
 
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            ThingDescriptions thingDesc = (ThingDescriptions) unmarshaller.unmarshal(new File(file));
+            ThingDescriptions thingDesc = (ThingDescriptions) unmarshaller.unmarshal(file);
 
             // Go through all the available types
             List<Object> objs = thingDesc.getThingTypeOrBridgeTypeOrChannelType();
             for (Object obj : objs) {
                 if (obj instanceof ChannelType) {
-                    channels.put((ChannelType) obj);
+                    channels.put(obj);
                 } else if (obj instanceof BridgeType) {
-                    bridges.put((BridgeType) obj);
+                    bridges.put(obj);
                 } else if (obj instanceof ChannelGroupType) {
-                    channelGroups.put((ChannelGroupType) obj);
+                    channelGroups.put(obj);
                 } else if (obj instanceof ThingType) {
-                    things.put((ThingType) obj);
+                    things.put(obj);
                 } else {
                     getLog().info("Unsupported class. " + obj.getClass().toString());
                 }
@@ -149,17 +155,33 @@ public class MyMojo extends AbstractMojo {
     /**
      * Parses the xml with the available configuration.
      *
-     * @param file
+     * @param file XML file.
      */
-    private void parseConfigDescriptions(String file) {
+    private void parseConfigDescriptions(File file) {
         try {
             JAXBContext jc = JAXBContext.newInstance(ConfigDescriptions.class);
 
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            ConfigDescriptions configDesc = (ConfigDescriptions) unmarshaller.unmarshal(new File(file));
+            ConfigDescriptions configDesc = (ConfigDescriptions) unmarshaller.unmarshal(file);
             for (ConfigDescription c : configDesc.getConfigDescription()) {
                 configList.put(c);
             }
+        } catch (Exception e) {
+            getLog().error(e);
+        }
+    }
+
+    /**
+     * Parses the xml with the available binding.
+     *
+     * @param file XML file.
+     */
+    private void parseBindingDescription(File file) {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(org.openhab.schemas.binding.v1_0.Binding.class);
+
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            binding = new Binding((org.openhab.schemas.binding.v1_0.Binding) unmarshaller.unmarshal(file));
         } catch (Exception e) {
             getLog().error(e);
         }

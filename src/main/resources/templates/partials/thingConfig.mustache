@@ -1,11 +1,11 @@
 {{^thingList.configDescriptions.empty}}
-    ## Thing Config
+## Thing Config
 {{/thingList.configDescriptions.empty}}
 {{#thingList}}
-    {{#model}}
-        {{#configDescriptions}}
-            ### {{id}}
-            {{>configDescriptions}}
-        {{/configDescriptions}}
-    {{/model}}
+{{#model}}
+{{#configDescriptions}}
+### {{id}}
+{{>configDescriptions}}
+{{/configDescriptions}}
+{{/model}}
 {{/thingList}}

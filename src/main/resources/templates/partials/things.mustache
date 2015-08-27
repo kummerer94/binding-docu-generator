@@ -1,11 +1,10 @@
 {{^thingList.empty}}
-    ## Things
-    |Thing Type Id|Channels|Channel Groups|Config|Description|
-    |---|---|---|---|
+## Things
+|Thing Type Id|Channels|Channel Groups|Config|Description|
+|---|---|---|---|
 {{/thingList.empty}}
 {{#thingList}}
-    {{#model}}<a
-            name="thing-id-{{id}}"></a>{{id}} |{{#channels}} {{>channelInfo}} {{/channels}}| {{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}} | {{#configDescription}} [{{uri}}](#config-desc-{{uri}}) {{/configDescription}}| {{description}}
-    {{/model}}
+{{#model}}<a name="thing-id-{{id}}"></a>{{id}} |{{#channels}} {{>channelInfo}} {{/channels}}| {{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}} | {{#configDescription}} [{{uri}}](#config-desc-{{uri}}) {{/configDescription}}| {{description}}
+{{/model}}
 {{/thingList}}
 

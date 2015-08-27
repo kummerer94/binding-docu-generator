@@ -4,52 +4,55 @@ layout: documentation
 
 {% include base.html %}
 
-#
-<bindingName> Binding
+# {{binding.name}} Binding - {{binding.author}}
 
-    _Give some details about what this binding is meant for - a protocol, system, specific device._
+{{binding.description}}
 
-    _If possible, provide some resources like pictures, a YouTube video, etc. to give an impression of what can be done
-    with this binding. You can place such resources into a `doc` folder next to this README.md._
+_If possible, provide some resources like pictures, a YouTube video, etc. to give an impression of what can be done
+with this binding. You can place such resources into a `doc` folder next to this README.md._
 
-    ## Supported Things
+## Supported Things
 
-    _Please describe the different supported things / devices within this section._
-    _Which different types are supported, which models were tested etc.?_
-    _Note that it is planned to generate some part of this based on the XML files within ```ESH-INF/thing``` of your
-    binding._
+_Please describe the different supported things / devices within this section._
+_Which different types are supported, which models were tested etc.?_
 
-    ## Discovery
+{{>partials/things}}
 
-    _Describe the available auto-discovery features here. Mention for what it works and what needs to be kept in mind
-    when using it._
+## Discovery
 
-    ## Binding Configuration
+_Describe the available auto-discovery features here. Mention for what it works and what needs to be kept in mind
+when using it._
 
-    {{>partials/config}}
+## Binding Configuration
 
-    _If your binding does not offer any generic configurations, you can remove this section completely._
+{{>partials/config}}
 
-    ## Thing Configuration
+_If your binding does not offer any generic configurations, you can remove this section completely._
 
-    _Describe what is needed to manually configure a thing, either through the (Paper) UI or via a thing-file. This
-    should be mainly about its mandatory and optional configuration parameters. A short example entry for a thing file
-    can help!_
+## Thing Configuration
 
-    _Note that it is planned to generate some part of this based on the XML files within ```ESH-INF/thing``` of your
-    binding._
+_Describe what is needed to manually configure a thing, either through the (Paper) UI or via a thing-file. This
+should be mainly about its mandatory and optional configuration parameters. A short example entry for a thing file
+can help!_
 
-    ## Channels
+{{>partials/thingConfig}}
 
-    _Here you should provide information about available channel types, what their meaning is and how they can be used._
+{{>partials/bridges}}
 
-    _Note that it is planned to generate some part of this based on the XML files within ```ESH-INF/thing``` of your
-    binding._
+{{>partials/bridgeConfig}}
 
-    ## Full Example
+## Channels
 
-    _Provide a full usage example based on textual configuration files (*.things, *.items, *.sitemap)._
+_Here you should provide information about available channel types, what their meaning is and how they can be used._
 
-    ## Any custom content here!
+{{>partials/channels}}
 
-    _Feel free to add additional sections for whatever you think should also be mentioned about your binding!_
+{{>partials/channelGroups}}
+
+## Full Example
+
+_Provide a full usage example based on textual configuration files (*.things, *.items, *.sitemap)._
+
+## Any custom content here!
+
+_Feel free to add additional sections for whatever you think should also be mentioned about your binding!_
