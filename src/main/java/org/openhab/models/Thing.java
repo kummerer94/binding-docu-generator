@@ -20,35 +20,66 @@ import org.openhab.schemas.thing_description.v1_0.ThingType;
  * Wrapper class to not fully depend on the existing models.
  */
 public class Thing implements Model<ThingType> {
+    /**
+     * The instance from the XML parser.
+     */
     protected ThingType thing;
 
+    /**
+     * Default constructor.
+     */
     public Thing() {
     }
 
+    /**
+     * Constructor.
+     *
+     * @param type Original instance from the XML parser.
+     */
     public Thing(ThingType type) {
         setModel(type);
     }
 
+    /**
+     * @return The instance from the XML parser.
+     */
     public ThingType getRealImpl() {
         return thing;
     }
 
+    /**
+     * Set the model.
+     *
+     * @param type Original instance from the XML parser.
+     */
     public void setModel(ThingType type) {
         this.thing = type;
     }
 
+    /**
+     * @return Id of the thing.
+     */
     public String id() {
         return thing.getId();
     }
 
+    /**
+     * @return Label of the thing.
+     */
     public String label() {
         return thing.getLabel();
     }
 
+    /**
+     * @return Description of the thing.
+     */
     public String description() {
         return thing.getDescription();
     }
 
+    /**
+     * @return Configuration reference of the thing.
+     */
     public String configDescriptionRef() {
         if (thing.getConfigDescriptionRef() != null) {
             return thing.getConfigDescriptionRef().getUri();
@@ -57,6 +88,9 @@ public class Thing implements Model<ThingType> {
         }
     }
 
+    /**
+     * @return A list of channels.
+     */
     public ChannelRefList channels() {
         ChannelRefList channelRefs = new ChannelRefList();
         if (thing.getChannels() != null) {
@@ -67,6 +101,9 @@ public class Thing implements Model<ThingType> {
         return channelRefs;
     }
 
+    /**
+     * @return A list of channel groups.
+     */
     public ChannelGroupRefList channelGroups() {
         ChannelGroupRefList channels = new ChannelGroupRefList();
         if (thing.getChannelGroups() != null) {
@@ -77,6 +114,9 @@ public class Thing implements Model<ThingType> {
         return channels;
     }
 
+    /**
+     * @return The configuration for the thing.
+     */
     public org.openhab.models.ConfigDescription configDescriptions() {
         if (thing.getConfigDescription() != null) {
             return new ConfigDescription(thing.getConfigDescription());

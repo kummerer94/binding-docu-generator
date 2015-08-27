@@ -8,10 +8,10 @@
 
 package org.openhab.models;
 
-/**
- * Created by Alexander on 27.08.2015.
- */
 public class Binding implements Model<org.openhab.schemas.binding.v1_0.Binding> {
+    /**
+     * The attribute holding the original instance from the XML parser.
+     */
     private org.openhab.schemas.binding.v1_0.Binding binding;
 
     /**

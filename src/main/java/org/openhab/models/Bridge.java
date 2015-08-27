@@ -10,7 +10,6 @@ package org.openhab.models;
 
 import org.openhab.schemas.thing_description.v1_0.BridgeType;
 import org.openhab.schemas.thing_description.v1_0.BridgeTypeRef;
-import org.openhab.schemas.thing_description.v1_0.ThingType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class Bridge extends Thing {
      * @param bridge The object from the XML parser.
      */
     public Bridge(BridgeType bridge) {
-        super((ThingType) bridge);
+        super(bridge);
         this.bridge = bridge;
     }
 

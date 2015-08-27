@@ -25,7 +25,6 @@ public class Channel implements Model<ChannelType> {
      * Default constructor.
      */
     public Channel() {
-
     }
 
     /**
