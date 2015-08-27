@@ -17,12 +17,31 @@ _Please describe the different supported things / devices within this section._
 _Which different types are supported, which models were tested etc.?_
 
 ## Things
-|Thing Type Id|Channels|Channel Groups|Config|Description|
-|---|---|---|---|
-<a name="thing-id-moon"></a>moon ||  [rise (moonRange)](#channel-group-id-moonRange),   [set (moonRange)](#channel-group-id-moonRange),   [phase (moonPhase)](#channel-group-id-moonPhase),   [eclipse (moonEclipse)](#channel-group-id-moonEclipse),   [distance (distance)](#channel-group-id-distance),   [perigee (distance)](#channel-group-id-distance),   [apogee (distance)](#channel-group-id-distance),   [position (position)](#channel-group-id-position),   [zodiac (moonZodiac)](#channel-group-id-moonZodiac)  | | Provides astronomical data from the moon
-<a name="thing-id-sun"></a>sun ||  [rise (sunRange)](#channel-group-id-sunRange),   [set (sunRange)](#channel-group-id-sunRange),   [noon (sunRange)](#channel-group-id-sunRange),   [night (sunRange)](#channel-group-id-sunRange),   [morningNight (sunRange)](#channel-group-id-sunRange),   [astroDawn (sunRange)](#channel-group-id-sunRange),   [nauticDawn (sunRange)](#channel-group-id-sunRange),   [civilDawn (sunRange)](#channel-group-id-sunRange),   [astroDusk (sunRange)](#channel-group-id-sunRange),   [nauticDusk (sunRange)](#channel-group-id-sunRange),   [civilDusk (sunRange)](#channel-group-id-sunRange),   [eveningNight (sunRange)](#channel-group-id-sunRange),   [daylight (sunRange)](#channel-group-id-sunRange),   [position (position)](#channel-group-id-position),   [zodiac (sunZodiac)](#channel-group-id-sunZodiac),   [season (season)](#channel-group-id-season),   [eclipse (sunEclipse)](#channel-group-id-sunEclipse)  | | Provides astronomical data from the sun
-
-
+<table>
+<thead>
+<th>Thing Type Id</th>
+<th>Channels</th>
+<th>Channel Groups</th>
+<th>Config</th>
+<th>Description</th>
+</thead>
+<tbody>
+<tr>
+<td><a name="thing-id-moon"></a>moon</td>
+<td></td>
+<td> <a href="#channel-group-id-moonRange">rise (moonRange)</a>,   <a href="#channel-group-id-moonRange">set (moonRange)</a>,   <a href="#channel-group-id-moonPhase">phase (moonPhase)</a>,   <a href="#channel-group-id-moonEclipse">eclipse (moonEclipse)</a>,   <a href="#channel-group-id-distance">distance (distance)</a>,   <a href="#channel-group-id-distance">perigee (distance)</a>,   <a href="#channel-group-id-distance">apogee (distance)</a>,   <a href="#channel-group-id-position">position (position)</a>,   <a href="#channel-group-id-moonZodiac">zodiac (moonZodiac)</a> </td>
+<td></td>
+<td>Provides astronomical data from the moon</td>
+</tr>
+<tr>
+<td><a name="thing-id-sun"></a>sun</td>
+<td></td>
+<td> <a href="#channel-group-id-sunRange">rise (sunRange)</a>,   <a href="#channel-group-id-sunRange">set (sunRange)</a>,   <a href="#channel-group-id-sunRange">noon (sunRange)</a>,   <a href="#channel-group-id-sunRange">night (sunRange)</a>,   <a href="#channel-group-id-sunRange">morningNight (sunRange)</a>,   <a href="#channel-group-id-sunRange">astroDawn (sunRange)</a>,   <a href="#channel-group-id-sunRange">nauticDawn (sunRange)</a>,   <a href="#channel-group-id-sunRange">civilDawn (sunRange)</a>,   <a href="#channel-group-id-sunRange">astroDusk (sunRange)</a>,   <a href="#channel-group-id-sunRange">nauticDusk (sunRange)</a>,   <a href="#channel-group-id-sunRange">civilDusk (sunRange)</a>,   <a href="#channel-group-id-sunRange">eveningNight (sunRange)</a>,   <a href="#channel-group-id-sunRange">daylight (sunRange)</a>,   <a href="#channel-group-id-position">position (position)</a>,   <a href="#channel-group-id-sunZodiac">zodiac (sunZodiac)</a>,   <a href="#channel-group-id-season">season (season)</a>,   <a href="#channel-group-id-sunEclipse">eclipse (sunEclipse)</a> </td>
+<td></td>
+<td>Provides astronomical data from the sun</td>
+</tr>
+</tbody>
+</table>
 
 ## Discovery
 

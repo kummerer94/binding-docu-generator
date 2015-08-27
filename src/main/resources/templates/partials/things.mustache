@@ -1,10 +1,25 @@
 {{^thingList.empty}}
 ## Things
-|Thing Type Id|Channels|Channel Groups|Config|Description|
-|---|---|---|---|
+<table>
+<thead>
+<th>Thing Type Id</th>
+<th>Channels</th>
+<th>Channel Groups</th>
+<th>Config</th>
+<th>Description</th>
+</thead>
 {{/thingList.empty}}
+<tbody>
 {{#thingList}}
-{{#model}}<a name="thing-id-{{id}}"></a>{{id}} |{{#channels}} {{>channelInfo}} {{/channels}}| {{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}} | {{#configDescription}} [{{uri}}](#config-desc-{{uri}}) {{/configDescription}}| {{description}}
+{{#model}}
+<tr>
+<td><a name="thing-id-{{id}}"></a>{{id}}</td>
+<td>{{#channels}} {{>channelInfo}} {{/channels}}</td>
+<td>{{#channelGroups}} {{>channelGroupInfo}} {{/channelGroups}}</td>
+<td>{{#configDescription}} <a href="#config-desc-{{uri}}">{{uri}}</a> {{/configDescription}}</td>
+<td>{{description}}</td>
+</tr>
 {{/model}}
 {{/thingList}}
-
+</tbody>
+</table>
