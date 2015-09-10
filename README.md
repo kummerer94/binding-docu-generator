@@ -1,4 +1,4 @@
-# binding-docu-generator maven plugin
+# binding-docu-generator maven plugin 
 Large parts of a binding for eclipse smarthome can be generated automatically from the XML files you create. This is done via this maven plugin.
 
 ## Contributing
