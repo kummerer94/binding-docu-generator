@@ -1,6 +1,13 @@
 # binding-docu-generator maven plugin
 Large parts of a binding for eclipse smarthome can be generated automatically from the XML files you create. This is done via this maven plugin.
 
+## Using the plugin
+The plugin executes at the life-cycle `package`. Its aim is to generate a markdown file (give the file a name via `readmeName`) from a given template (`templateFile`).
+
+**Please make sure to include the templates directory into your resources directory.** This is currently necessary so that mustache is able to work. 
+
+You can find an example [here](src/main/resources/readme.mustache).
+
 ## Contributing
 You are welcome to contribute to this repository. Just send me a pull request.
 

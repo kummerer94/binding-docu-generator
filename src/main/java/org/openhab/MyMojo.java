@@ -33,12 +33,10 @@ import java.util.List;
  * NOTE: CARE FOR THE NAMESPACE IN {@link ThingDescriptions} and {@link ConfigDescriptions}.
  *
  * @goal generate-docu
- * @phase process-sources
+ * @phase package
  */
 public class MyMojo extends AbstractMojo {
 
-    //    private static final String XMLSCHEMA = "http://eclipse.org/smarthome/schemas/binding/v1.0.0";
-//    private static final String THINGXSD = "http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd";
     private static final String THING_SUBDIR = "thing/";
     private static final String BINDING_SUBDIR = "binding/";
     private static final String CONFIG_SUBDIR = "config/";
@@ -51,25 +49,41 @@ public class MyMojo extends AbstractMojo {
     private Binding binding;
 
     /**
-     * @parameter name="esh-inf-dir" alias="eshInfDir" default-value="ESH-INF/"
+     * @parameter name="esh-inf-dir" alias="eshInfDir" default-value="src/main/java/ESH-INF/"
      */
     private String eshDir;
 
+    /**
+     * @parameter name="templates" alias="templates" default-value="src/main/resources/templates/"
+     */
+    private String templates;
 
+    /**
+     * @parameter name="template-file" alias="templateFile" default-value="readme.mustache"
+     */
+    private String template;
+
+    /**
+     * @parameter name="readme-name" alias="readmeName" default-value="generated-docu.md"
+     */
+    private String readmeName;
+
+
+    /**
+     * Execute the mojo.
+     *
+     * @throws MojoExecutionException
+     */
     public void execute() throws MojoExecutionException {
-        // Configure loggers
-        BasicConfigurator.configure();
-
-        // EXAMPLE: ESH-INF
-        eshDir = "src/test/resources/ESH-INF/";
-        // EXAMPLE: ESH-INF-BOSCH
-//        eshDir = "src/test/resources/ESH-INF-BOSCH/";
+        prepare();
         scanDir();
 
         try {
             // Compile mustache template
             MustacheFactory mf = new DefaultMustacheFactory();
-            Mustache mustache = mf.compile("src/main/resources/templates/readme.mustache");
+            // Get template string
+            Mustache mustache = mf.compile(templates + template);
+            // Put everything into the scope
             HashMap<String, Object> scope = new HashMap<String, Object>();
             scope.put("binding", binding);
             scope.put("bridgeList", bridges);
@@ -77,7 +91,7 @@ public class MyMojo extends AbstractMojo {
             scope.put("channelList", channels);
             scope.put("channelGroupList", channelGroups);
             scope.put("configList", configList);
-            mustache.execute(new FileWriter("generated-docu-mustache.md"), scope).flush();
+            mustache.execute(new FileWriter(readmeName), scope).flush();
         } catch (Exception e) {
             getLog().error(e);
         }
@@ -118,6 +132,14 @@ public class MyMojo extends AbstractMojo {
                 }
             }
         }
+    }
+
+    /**
+     * Handles the start up of the mojo.
+     */
+    private void prepare() {
+        // Configure loggers
+        BasicConfigurator.configure();
     }
 
     /**

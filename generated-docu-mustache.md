@@ -4,9 +4,9 @@ layout: documentation
 
 {% include base.html %}
 
-# Astro Binding Binding - Gerhard Riegler
+# Plugwise Anna Binding Binding - Plugwise B.V.
 
-The Astro binding calculates astronomical data from sun and moon.
+This is the binding for Plugwise Anna devices.
 
 _If possible, provide some resources like pictures, a YouTube video, etc. to give an impression of what can be done
 with this binding. You can place such resources into a `doc` folder next to this README.md._
@@ -16,7 +16,6 @@ with this binding. You can place such resources into a `doc` folder next to thi
 _Please describe the different supported things / devices within this section._
 _Which different types are supported, which models were tested etc.?_
 
-## Things
 <table>
 <thead>
 <th>Thing Type Id</th>
@@ -27,18 +26,18 @@ _Which different types are supported, which models were tested etc.?_
 </thead>
 <tbody>
 <tr>
-<td><a name="thing-id-moon"></a>moon</td>
+<td><a name="thing-id-thermostat"></a>thermostat</td>
+<td>  <a href="#channel-id-roomSetpoint">roomSetpoint</a>,    <a href="#channel-id-heatingMode">heatingMode</a>,    <a href="#channel-id-currentRoomTemperature">currentRoomTemperature</a>,    <a href="#channel-id-schedule">schedule</a> </td>
 <td></td>
-<td> <a href="#channel-group-id-moonRange">rise (moonRange)</a>,   <a href="#channel-group-id-moonRange">set (moonRange)</a>,   <a href="#channel-group-id-moonPhase">phase (moonPhase)</a>,   <a href="#channel-group-id-moonEclipse">eclipse (moonEclipse)</a>,   <a href="#channel-group-id-distance">distance (distance)</a>,   <a href="#channel-group-id-distance">perigee (distance)</a>,   <a href="#channel-group-id-distance">apogee (distance)</a>,   <a href="#channel-group-id-position">position (position)</a>,   <a href="#channel-group-id-moonZodiac">zodiac (moonZodiac)</a> </td>
 <td></td>
-<td>Provides astronomical data from the moon</td>
+<td>An anna thermostat.</td>
 </tr>
 <tr>
-<td><a name="thing-id-sun"></a>sun</td>
+<td><a name="thing-id-boiler"></a>boiler</td>
 <td></td>
-<td> <a href="#channel-group-id-sunRange">rise (sunRange)</a>,   <a href="#channel-group-id-sunRange">set (sunRange)</a>,   <a href="#channel-group-id-sunRange">noon (sunRange)</a>,   <a href="#channel-group-id-sunRange">night (sunRange)</a>,   <a href="#channel-group-id-sunRange">morningNight (sunRange)</a>,   <a href="#channel-group-id-sunRange">astroDawn (sunRange)</a>,   <a href="#channel-group-id-sunRange">nauticDawn (sunRange)</a>,   <a href="#channel-group-id-sunRange">civilDawn (sunRange)</a>,   <a href="#channel-group-id-sunRange">astroDusk (sunRange)</a>,   <a href="#channel-group-id-sunRange">nauticDusk (sunRange)</a>,   <a href="#channel-group-id-sunRange">civilDusk (sunRange)</a>,   <a href="#channel-group-id-sunRange">eveningNight (sunRange)</a>,   <a href="#channel-group-id-sunRange">daylight (sunRange)</a>,   <a href="#channel-group-id-position">position (position)</a>,   <a href="#channel-group-id-sunZodiac">zodiac (sunZodiac)</a>,   <a href="#channel-group-id-season">season (season)</a>,   <a href="#channel-group-id-sunEclipse">eclipse (sunEclipse)</a> </td>
 <td></td>
-<td>Provides astronomical data from the sun</td>
+<td></td>
+<td>A central heating boiler</td>
 </tr>
 </tbody>
 </table>
@@ -50,13 +49,6 @@ when using it._
 
 ## Binding Configuration
 
-## Configurations
-
-## <a name="config-desc-thing-type:astro:config"></a> thing-type:astro:config
-|Name|Type|Properties|Context|Description|
-|---|---|---|---|---|
-|geolocation | TEXT | required=false, readOnly=false |  | The latitude and longitude separated with a comma (xx.xxxxxx,xx.xxxxxx) |
-|interval | INTEGER | required=false, readOnly=false, max=86400, min=1 |  | Refresh interval for positional data calculation in seconds. |
 
 
 
@@ -74,7 +66,7 @@ can help!_
 ## Bridges
 |Bridge Type Id|Channel Groups|Channels|Description|
 |---|---|---|---|
-|<a name="bridge-id-bridge"></a>bridge |  |   [free_mem](#channel-id-free_mem),    [duty_cycle](#channel-id-duty_cycle)  | This bridge represents the MAX! Cube LAN gateway.&#10;        
+|<a name="bridge-id-bridge"></a>bridge |  |  | The plugwise smile device to connect anna and tom devices.
 
 
 ## Bridge Config
@@ -82,13 +74,8 @@ can help!_
 ### bridge
 |Name|Type|Properties|Context|Description|
 |---|---|---|---|---|
-|ipAddress | TEXT | required=false, readOnly=false |  | The IP address of the MAX! Cube LAN gateway&#10;                 |
-|port | INTEGER | required=false, readOnly=false, max=65335, min=1 |  | Port of the LAN gateway |
-|refreshInterval | INTEGER | required=false, readOnly=false, min=1 |  | The refresh interval in seconds which is used to poll given&#10;                    MAX! Cube.&#10;                 |
-|serialNumber | TEXT | required=false, readOnly=false |  | The Serial Number identifies one specific device.&#10;                 |
-|rfAddress | TEXT | required=false, readOnly=false |  | The RF Address used for communication between the devices.&#10;                 |
-|exclusive | BOOLEAN | required=false, readOnly=false |  | If set to true, the binding will leave the connection&#10;                    to the Cube open.&#10;                 |
-|maxRequestsPerConnection | INTEGER | required=false, readOnly=false |  | In exclusive mode, how many requests are allowed until&#10;                    connection is closed and reopened.&#10;                 |
+|id | TEXT | required=true, readOnly=false |  | &#10;                    The Short-ID for smile.&#10;                 |
+|pollingInterval | INTEGER | required=false, readOnly=false, max=300, min=15 |  | &#10;                    The refresh interval for all values.&#10;                 |
 
 
 
@@ -97,50 +84,14 @@ can help!_
 
 _Here you should provide information about available channel types, what their meaning is and how they can be used._
 
-## Channels
 |Channel Type Id|Item Type|ReadOnly|Options|Description|
 |---|---|---|---|---|
-<a name="channel-id-free_mem"></a>free_mem | Number |  Yes    |    | Free memory slots to store commands send to the devices&#10;        
-<a name="channel-id-duty_cycle"></a>duty_cycle | Number |  Yes    |    | Duty Cycle for sending commands to the devices&#10;        
-<a name="channel-id-azimuth"></a>azimuth | Number |  Yes    |    | The azimuth of the planet
-<a name="channel-id-elevation"></a>elevation | Number |  Yes    |    | The elevation of the planet
-<a name="channel-id-start"></a>start | DateTime |  Yes    |    | The start time of the event
-<a name="channel-id-end"></a>end | DateTime |  Yes    |    | The end time of the event
-<a name="channel-id-duration"></a>duration | Number |  Yes    |    | The duration time in minutes of the event
-<a name="channel-id-sign"></a>sign | String |  Yes    |  Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces  | The sign of the zodiac
-<a name="channel-id-seasonName"></a>seasonName | String |  Yes    |  Spring, Summer, Autumn, Winter  | The name of the current season
-<a name="channel-id-spring"></a>spring | DateTime |  Yes    |    | The beginning of spring
-<a name="channel-id-summer"></a>summer | DateTime |  Yes    |    | The beginning of summer
-<a name="channel-id-autumn"></a>autumn | DateTime |  Yes    |    | The beginning of autumn
-<a name="channel-id-winter"></a>winter | DateTime |  Yes    |    | The beginning of winter
-<a name="channel-id-total"></a>total | DateTime |  Yes    |    | The DateTime of the next total eclipse
-<a name="channel-id-partial"></a>partial | DateTime |  Yes    |    | The DateTime of the next partial eclipse
-<a name="channel-id-ring"></a>ring | DateTime |  Yes    |    | The DateTime of the next ring eclipse
-<a name="channel-id-firstQuarter"></a>firstQuarter | DateTime |  Yes    |    | The DateTime the moon is in the first quarter
-<a name="channel-id-thirdQuarter"></a>thirdQuarter | DateTime |  Yes    |    | The DateTime the moon is in the third quarter
-<a name="channel-id-fullMoon"></a>fullMoon | DateTime |  Yes    |    | The DateTime for full moon
-<a name="channel-id-newMoon"></a>newMoon | DateTime |  Yes    |    | The DateTime for new moon
-<a name="channel-id-age"></a>age | Number |  Yes    |    | The age of the moon in days
-<a name="channel-id-illumination"></a>illumination | Number |  Yes    |    | The illumination of the moon in %
-<a name="channel-id-phaseName"></a>phaseName | String |  Yes    |  New moon, Waxing crescent, First quarter, Waxing gibbous, Full moon, Wanning gibbous, Third quarter, Waning crescent  | The name of the current moon phase
-<a name="channel-id-distanceDate"></a>distanceDate | DateTime |  Yes    |    | The DateTime when the distance is reached
-<a name="channel-id-miles"></a>miles | Number |  Yes    |    | The distance in miles
-<a name="channel-id-kilometer"></a>kilometer | Number |  Yes    |    | The distance in kilometers
+<a name="channel-id-roomSetpoint"></a>roomSetpoint | Number |   No   |    | The room temperature setpoint.
+<a name="channel-id-heatingMode"></a>heatingMode | String |   No   |  Comfort, Eco, Super eco  | The current anna operation mode.
+<a name="channel-id-currentRoomTemperature"></a>currentRoomTemperature | Number |  Yes    |    | The current measured room temperature.
+<a name="channel-id-schedule"></a>schedule | String |   No   |    | The current weekly schedule in JSON format.
 
 
-## Channel Groups
-|Channel Group Type Id|Channels|Description|
-|---|---|---|
-<a name="channel-group-id-position"></a>position |   [azimuth](#channel-id-azimuth),    [elevation](#channel-id-elevation)  | The position of the planet
-<a name="channel-group-id-sunRange"></a>sunRange |   [start](#channel-id-start),    [end](#channel-id-end),    [duration](#channel-id-duration)  | Range for a sun event
-<a name="channel-group-id-moonRange"></a>moonRange |   [start](#channel-id-start),    [end](#channel-id-end)  | Range for a moon event
-<a name="channel-group-id-sunZodiac"></a>sunZodiac |   [start](#channel-id-start),    [end](#channel-id-end),    [sign](#channel-id-sign)  | The Zodiac of the sun
-<a name="channel-group-id-season"></a>season |   [name](#channel-id-name),    [spring](#channel-id-spring),    [summer](#channel-id-summer),    [autumn](#channel-id-autumn),    [winter](#channel-id-winter)  | The seasons this year
-<a name="channel-group-id-sunEclipse"></a>sunEclipse |   [total](#channel-id-total),    [partial](#channel-id-partial),    [ring](#channel-id-ring)  | The DateTime of the next sun eclipses
-<a name="channel-group-id-moonPhase"></a>moonPhase |   [firstQuarter](#channel-id-firstQuarter),    [thirdQuarter](#channel-id-thirdQuarter),    [full](#channel-id-full),    [new](#channel-id-new),    [age](#channel-id-age),    [illumination](#channel-id-illumination),    [name](#channel-id-name)  | Moonphases
-<a name="channel-group-id-moonEclipse"></a>moonEclipse |   [total](#channel-id-total),    [partial](#channel-id-partial)  | The DateTime of the next moon eclipses
-<a name="channel-group-id-distance"></a>distance |   [date](#channel-id-date),    [miles](#channel-id-miles),    [kilometer](#channel-id-kilometer)  | Distance data
-<a name="channel-group-id-moonZodiac"></a>moonZodiac |   [sign](#channel-id-sign)  | The Zodiac of the moon
 
 
 ## Full Example
