@@ -6,12 +6,11 @@
   ~ which accompanies this distribution.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openhab</groupId>
     <artifactId>binding-docu-generator</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1</version>
 
     <packaging>maven-plugin</packaging>
 
@@ -22,7 +21,7 @@
         <connection>scm:git:git@github.com:kummerer94/binding-docu-generator.git</connection>
         <developerConnection>scm:git:git@github.com:kummerer94/binding-docu-generator.git</developerConnection>
         <url>scm:git:git@github.com:kummerer94/binding-docu-generator.git</url>
-        <tag>HEAD</tag>
+        <tag>0.1.1</tag>
     </scm>
 
     <dependencies>
