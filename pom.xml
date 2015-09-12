@@ -21,7 +21,7 @@
         <connection>scm:git:git@github.com:kummerer94/binding-docu-generator.git</connection>
         <developerConnection>scm:git:git@github.com:kummerer94/binding-docu-generator.git</developerConnection>
         <url>scm:git:git@github.com:kummerer94/binding-docu-generator.git</url>
-        <tag>0.1.1</tag>
+        <tag>0.1.2</tag>
     </scm>
 
     <dependencies>
