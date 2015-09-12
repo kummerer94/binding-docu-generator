@@ -19,7 +19,7 @@ public class DocuTest {
 //    public void testMojoGoal() throws Exception {
 //        File testPom = new File(getBasedir(), "src/test/resources/test-pom.xml");
 //
-//        MyMojo mojo = (MyMojo) lookupMojo("scan-docu", testPom);
+//        GenerateDocumentation mojo = (GenerateDocumentation) lookupMojo("scan-docu", testPom);
 //
 //        assertNotNull(mojo);
 //    }

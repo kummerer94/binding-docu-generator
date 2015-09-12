@@ -14,6 +14,9 @@ import com.github.mustachejava.MustacheFactory;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.openhab.data.*;
 import org.openhab.models.Binding;
 import org.openhab.schemas.config_description.v1_0.ConfigDescription;
@@ -32,10 +35,9 @@ import java.util.List;
  * <p/>
  * NOTE: CARE FOR THE NAMESPACE IN {@link ThingDescriptions} and {@link ConfigDescriptions}.
  *
- * @goal generate-docu
- * @phase package
  */
-public class MyMojo extends AbstractMojo {
+@Mojo( name = "generate-docu", defaultPhase = LifecyclePhase.PACKAGE )
+public class GenerateDocumentation extends AbstractMojo {
 
     private static final String THING_SUBDIR = "thing/";
     private static final String BINDING_SUBDIR = "binding/";
@@ -49,23 +51,27 @@ public class MyMojo extends AbstractMojo {
     private Binding binding;
 
     /**
-     * @parameter name="esh-inf-dir" alias="eshInfDir" default-value="src/main/java/ESH-INF/"
+     * The directory in which your binding xml files are.
      */
+    @Parameter( defaultValue = "src/main/java/ESH-INF" )
     private String eshDir;
 
     /**
-     * @parameter name="templates" alias="templates" default-value="src/main/resources/templates/"
+     * Your template files.
      */
+    @Parameter( defaultValue = "src/main/resources/templates/" )
     private String templates;
 
     /**
-     * @parameter name="template-file" alias="templateFile" default-value="readme.mustache"
+     * Name of your readme template file.
      */
+    @Parameter( defaultValue = "readme.mustache" )
     private String template;
 
     /**
-     * @parameter name="readme-name" alias="readmeName" default-value="generated-docu.md"
+     * The name of the generated docu file.
      */
+    @Parameter( defaultValue = "generated-docu.md" )
     private String readmeName;
 
 
