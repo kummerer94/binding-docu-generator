@@ -11,11 +11,20 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openhab</groupId>
     <artifactId>binding-docu-generator</artifactId>
+    <version>0.1.1-SNAPSHOT</version>
+
     <packaging>maven-plugin</packaging>
 
-    <version>0.1.1-SNAPSHOT</version>
     <name>binding-docu-generator Maven Mojo</name>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/kummerer94/binding-docu-generator</url>
+
+    <scm>
+        <connection>scm:git:git@github.com:kummerer94/binding-docu-generator.git</connection>
+        <developerConnection>scm:git:git@github.com:kummerer94/binding-docu-generator.git</developerConnection>
+        <url>scm:git:git@github.com:kummerer94/binding-docu-generator.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
