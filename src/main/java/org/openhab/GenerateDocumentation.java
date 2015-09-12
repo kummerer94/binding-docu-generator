@@ -11,6 +11,7 @@ package org.openhab;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,6 +28,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,15 +39,25 @@ import java.util.List;
  * Goal which touches a timestamp file.
  * <p/>
  * NOTE: CARE FOR THE NAMESPACE IN {@link ThingDescriptions} and {@link ConfigDescriptions}.
- *
  */
-@Mojo( name = "generate-docu", defaultPhase = LifecyclePhase.PACKAGE )
+@Mojo(name = "generate-docu", defaultPhase = LifecyclePhase.PACKAGE)
 public class GenerateDocumentation extends AbstractMojo {
 
+    /**
+     * ESH-INF/ subdirectories.
+     */
     private static final String THING_SUBDIR = "thing/";
     private static final String BINDING_SUBDIR = "binding/";
     private static final String CONFIG_SUBDIR = "config/";
 
+    /**
+     * URL for the download of the templates.
+     */
+    private static final String DOWNLOAD_DIR = "https://github.com/kummerer94/binding-docu-generator/raw/master/src/main/resources/templates/";
+
+    /**
+     * Data for the templates.
+     */
     private ChannelList channels = new ChannelList();
     private ThingList things = new ThingList();
     private ChannelGroupList channelGroups = new ChannelGroupList();
@@ -53,25 +68,25 @@ public class GenerateDocumentation extends AbstractMojo {
     /**
      * The directory in which your binding xml files are.
      */
-    @Parameter( defaultValue = "src/main/java/ESH-INF" )
+    @Parameter(defaultValue = "src/main/java/ESH-INF/")
     private String eshDir;
 
     /**
      * Your template files.
      */
-    @Parameter( defaultValue = "src/main/resources/templates/" )
+    @Parameter(defaultValue = "src/main/resources/templates/")
     private String templates;
 
     /**
      * Name of your readme template file.
      */
-    @Parameter( defaultValue = "readme.mustache" )
+    @Parameter(defaultValue = "readme.mustache")
     private String template;
 
     /**
      * The name of the generated docu file.
      */
-    @Parameter( defaultValue = "generated-docu.md" )
+    @Parameter(defaultValue = "generated-docu.md")
     private String readmeName;
 
 
@@ -83,6 +98,8 @@ public class GenerateDocumentation extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         prepare();
         scanDir();
+
+        getLog().info(Paths.get("").toAbsolutePath().toString());
 
         try {
             // Compile mustache template
@@ -110,10 +127,11 @@ public class GenerateDocumentation extends AbstractMojo {
         // Scan the binding directory.
         File binding = new File(eshDir + BINDING_SUBDIR + "binding.xml");
         if (binding.exists()) {
+            getLog().debug("Found binding xml: "+ binding.getName());
             parseBindingDescription(binding);
         }
 
-        // Scan the things directory
+        // Scan the things directory.
         File things = new File(eshDir + THING_SUBDIR);
         if (things.exists() && things.isDirectory()) {
             for (File file : things.listFiles()) {
@@ -146,6 +164,58 @@ public class GenerateDocumentation extends AbstractMojo {
     private void prepare() {
         // Configure loggers
         BasicConfigurator.configure();
+
+        // Prepare the templates
+        prepareTemplateDir();
+    }
+
+    /**
+     * Prepares the template directory.
+     *
+     * If needed downloads a set of template files.
+     */
+    private void prepareTemplateDir() {
+        String[] downloads = {
+                template.replace(".mustache", ""),
+                "partials/bridgeConfig",
+                "partials/bridges",
+                "partials/channelGroupInfo",
+                "partials/channelGroups",
+                "partials/channelInfo",
+                "partials/channels",
+                "partials/config",
+                "partials/configDescriptions",
+                "partials/parameterRow",
+                "partials/paramProperties",
+                "partials/thingConfig",
+                "partials/things"
+        };
+        // Download all files.
+        for(String url : downloads) {
+            try {
+                // Copy file from URL.
+                String downloadUrl = DOWNLOAD_DIR + url + ".mustache";
+                String fileName = templates + url + ".mustache";
+                if(downloadNeeded(fileName)) {
+                    getLog().debug("Downloading " + fileName + " from " + downloadUrl);
+                    FileUtils.copyURLToFile(new URL(downloadUrl), new File(fileName));
+                }
+            } catch (MalformedURLException e) {
+                getLog().error(e);
+            } catch (IOException e) {
+                getLog().error(e);
+            }
+        }
+    }
+
+    /**
+     * Are the template files already present?
+     *
+     * @param fileName The url.
+     * @return Is the download needed?
+     */
+    public boolean downloadNeeded(String fileName) {
+        return !new File(fileName).exists();
     }
 
     /**
@@ -172,7 +242,7 @@ public class GenerateDocumentation extends AbstractMojo {
                 } else if (obj instanceof ThingType) {
                     things.put(obj);
                 } else {
-                    getLog().info("Unsupported class. " + obj.getClass().toString());
+                    getLog().debug("Unsupported class. " + obj.getClass().toString());
                 }
             }
         } catch (Exception e) {
